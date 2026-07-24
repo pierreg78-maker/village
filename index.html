@@ -412,6 +412,13 @@
     </footer>
   </main>
 
+  <audio id="ambiance-oiseaux" loop preload="auto">
+  <source
+    src="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/main/assets/sons/ambiance/oiseaux.wav"
+    type="audio/wav"
+  >
+</audio>
+  
   <script>
     const API_URL =
       'https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec';
@@ -505,6 +512,21 @@
     }
 
     chargerProfil();
+    const ambianceOiseaux = document.getElementById("ambiance-oiseaux");
+
+ambianceOiseaux.volume = 0.99;
+
+function demarrerAmbianceOiseaux() {
+  ambianceOiseaux.play().catch(() => {
+    console.log("Le navigateur attend une interaction avant de lancer le son.");
+  });
+
+  document.removeEventListener("click", demarrerAmbianceOiseaux);
+  document.removeEventListener("touchstart", demarrerAmbianceOiseaux);
+}
+
+document.addEventListener("click", demarrerAmbianceOiseaux);
+document.addEventListener("touchstart", demarrerAmbianceOiseaux);
   </script>
 </body>
 </html>
