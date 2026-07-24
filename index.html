@@ -310,8 +310,8 @@
     <header>
       <h1>🏡 Le Village du hasard</h1>
       <p class="intro">
-        Choisissez une salle de jeu et gagnez des pièces d’or
-        (pour les gains, l'activation du profil dans la Vitrine est nécessaire)
+        Choisissez une salle de jeu et gagnez des pièces d’or.
+        Pour les gains, l'activation du profil joueur dans la Vitrine est nécessaire.
       </p>
 
       <div class="alerte" id="profilAlerte">
@@ -413,10 +413,10 @@
     </footer>
   </main>
 
-  <audio id="ambiance-oiseaux" loop preload="auto">
+  <audio id="ambiance-celtique" loop preload="auto">
   <source
-    src="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/main/assets/sons/ambiance/oiseaux.wav"
-    type="audio/wav"
+    src="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/main/assets/sons/ambiance/celtic_loop.mp3"
+    type="audio/mp3"
   >
 </audio>
   
@@ -513,21 +513,21 @@
     }
 
     chargerProfil();
-    const ambianceOiseaux = document.getElementById("ambiance-oiseaux");
+    const ambianceCeltique = document.getElementById("ambiance-celtique");
 
-ambianceOiseaux.volume = 0.30;
+ambianceCeltique.volume = 0.30;
 
-function demarrerAmbianceOiseaux() {
-  ambianceOiseaux.play().catch(() => {
+function demarrerAmbianceCeltique() {
+  ambianceCeltique.play().catch(() => {
     console.log("Le navigateur attend une interaction avant de lancer le son.");
   });
 
-  document.removeEventListener("click", demarrerAmbianceOiseaux);
-  document.removeEventListener("touchstart", demarrerAmbianceOiseaux);
+  document.removeEventListener("click", demarrerAmbianceCeltique);
+  document.removeEventListener("touchstart", demarrerAmbianceCeltique);
 }
 
-document.addEventListener("click", demarrerAmbianceOiseaux);
-document.addEventListener("touchstart", demarrerAmbianceOiseaux);
+document.addEventListener("click", demarrerAmbianceCeltique);
+document.addEventListener("touchstart", demarrerAmbianceCeltique);
   </script>
 </body>
 </html>
