@@ -310,8 +310,8 @@
     <header>
       <h1>🏡 Le Village du hasard</h1>
       <p class="intro">
-        Choisissez une salle de jeu et gagnez des pièces d’or.
-        Pour les gains, l'activation du profil joueur dans la Vitrine est nécessaire.
+        Choisissez une salle de jeu et gagnez des pièces d’or virtuelles.
+        Pour empocher les gains, il est nécessaire d'avoir un "profil" (un compte) que l'on active dans la Vitrine. 
       </p>
 
       <div class="alerte" id="profilAlerte">
@@ -335,7 +335,7 @@
           <div class="icone" aria-hidden="true">🎁</div>
           <div>
             <h2>La Vitrine enchantée</h2>
-            <p>Découvrez les trésors du village, ouvrez un compte pour gagner et dépenser vos pièces d’or.</p>
+            <p>Ouvrez d'abord ici un compte ("profil") afin de pouvoir encaisser vos gains et d'acheter toutes sortes de choses.</p>
           </div>
           <a class="action" href="https://pierreg78-maker.github.io/vitrine-enchantee/">
             Entrer dans la vitrine
@@ -345,7 +345,7 @@
         <article class="lieu actif">
           <div class="icone" aria-hidden="true">&#128176;</div>
           <div>
-            <h2>Le Loto Magique</h2>
+            <h2>Le Loto Bingo</h2>
             <p>Tirez 3 boules, complétez la grille et gagnez des pièces d’or.</p>
           </div>
           <a class="action" href="https://pierreg78-maker.github.io/loto/">
@@ -357,7 +357,7 @@
           <div class="icone" aria-hidden="true">🃏</div>
           <div>
             <h2>La table de Blackjack</h2>
-            <p>Faites moins de 21 et mieux que le croupier pour gagner vite et gros. Mise min. de 10 pièces d'or</p>
+            <p>Faites moins de 21 points et mieux que le croupier pour gagner vite et gros. Mise min. de 10 pièces d'or</p>
           </div>
           <a class="action" href="https://pierreg78-maker.github.io/blackjack/">
             Jouer au Blackjack
@@ -401,7 +401,7 @@
 
     <footer>
       <strong>Atelier Mémoire — Le Village du hasard</strong>
-      <p>Version 0.2 légère, sans images, sans framework et sans police externe. <a href="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/refs/heads/main/assets/sons/credits.md">Crédits bruitages des jeux</a></p>
+      <p> <a href="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/refs/heads/main/assets/sons/credits.md">Crédits bruitages des jeux</a></p>
     </footer>
   </main>
 
@@ -507,7 +507,7 @@
     chargerProfil();
     const ambianceCeltique = document.getElementById("ambiance-celtique");
 
-ambianceCeltique.volume = 0.20;
+ambianceCeltique.volume = 0.10;
 
 function demarrerAmbianceCeltique() {
   ambianceCeltique.play().catch(() => {
