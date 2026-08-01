@@ -14,7 +14,7 @@
   const VERSION = '0.1.0';
 
   const config = {
-    apiUrl: 'https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec',
+    apiUrl: 'https://script.google.com/macros/s/AKfycbw_4GnQV3ItqkkFBY2RnTo9wKeRUwIAyrjhaPC4qLiBtR4gLC7CVd3nKeC_pKXHZKnS/exec',
     villageUrl: 'https://pierreg78-maker.github.io/village/',
     cleProfil: 'vitrineProfilActif',
     dureeNotification: 3200,
