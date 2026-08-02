@@ -3,1511 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Roue de la Fortune</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Le Village du hasard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0d0d0d;
-            --bg-secondary: #1a1510;
-            --fg: #fdf6e3;
-            --muted: #8a7e6b;
-            --accent: #d4a017;
-            --accent-glow: #f5c842;
-            --card: rgba(30, 25, 18, 0.92);
-            --border: rgba(212, 160, 23, 0.3);
-            --danger: #c0392b;
-            --success: #27ae60;
-            --pink: #e84393;
-            --pink-light: #fd79a8;
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-main: #f0f4ff;
+            --bg-header: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 50%, #fd79a8 100%);
+            --card-bg: #ffffff;
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bd1;
+            --shadow-card: 0 4px 15px rgba(0,0,0,0.08);
+            --shadow-card-hover: 0 8px 30px rgba(108,92,231,0.25);
+            --radius: 16px;
+        }
 
         body {
             font-family: 'Nunito', sans-serif;
-            background: var(--bg);
-            color: var(--fg);
+            background: var(--bg-main);
+            color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
         }
 
-        body::before {
+        /* ---- HEADER ---- */
+        header {
+            background: var(--bg-header);
+            text-align: center;
+            padding: 50px 20px 55px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
             content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(ellipse at 20% 50%, rgba(212, 160, 23, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(192, 57, 43, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 85%, rgba(39, 174, 96, 0.03) 0%, transparent 50%);
+            position: absolute;
+            top: -60%;
+            left: -10%;
+            width: 120%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: var(--bg-main);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        header h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            color: #fff;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ---- DECORATIONS FLOTTANTES ---- */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* ============ GUIRLANDES ============ */
-        .garland {
-            position: fixed;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .garland-top::after,
-        .garland-bottom::after {
-            content: '';
+        .shape {
             position: absolute;
-            left: 0; right: 0;
-            height: 1px;
-            background: rgba(120, 100, 60, 0.5);
-            transition: all 0.3s;
+            border-radius: 50%;
+            opacity: 0.12;
+            background: #fff;
+            animation: floatShape 8s ease-in-out infinite;
         }
-        .garland-top::after { top: 9px; }
-        .garland-bottom::after { bottom: 9px; }
 
-        .garland-left::after,
-        .garland-right::after {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 1px;
-            background: rgba(120, 100, 60, 0.5);
-            transition: all 0.3s;
+        .shape:nth-child(1) { width: 60px; height: 60px; top: 15%; left: 8%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 40px; height: 40px; top: 60%; left: 15%; animation-delay: 1.5s; }
+        .shape:nth-child(3) { width: 80px; height: 80px; top: 20%; right: 10%; animation-delay: 3s; }
+        .shape:nth-child(4) { width: 30px; height: 30px; top: 65%; right: 20%; animation-delay: 4.5s; }
+        .shape:nth-child(5) { width: 50px; height: 50px; top: 40%; left: 45%; animation-delay: 2s; }
+        .shape:nth-child(6) { width: 25px; height: 25px; top: 10%; left: 60%; animation-delay: 5s; }
+
+        @keyframes floatShape {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-18px) scale(1.1); }
         }
-        .garland-left::after { left: 9px; }
-        .garland-right::after { right: 9px; }
 
-        .garland-top,
-        .garland-bottom {
-            left: 0; right: 0;
-            height: 32px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-evenly;
-            padding: 0 8px;
+        /* ---- CONTENEUR PRINCIPAL ---- */
+        main {
+            max-width: 1100px;
+            margin: -20px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
         }
-        .garland-top { top: 0; }
-        .garland-bottom { bottom: 0; }
-        .garland-top .garland-bulb { margin-top: 10px; }
-        .garland-bottom .garland-bulb { margin-bottom: 10px; margin-top: auto; }
 
-        .garland-left,
-        .garland-right {
-            top: 0; bottom: 0;
-            width: 32px;
+        /* ---- GRILLE DE CARTES ---- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* ---- CARTE ---- */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            justify-content: space-evenly;
-            padding: 8px 0;
-        }
-        .garland-left { left: 0; }
-        .garland-right { right: 0; }
-        .garland-left .garland-bulb,
-        .garland-right .garland-bulb { margin-left: 12px; }
-
-        .garland-bulb {
-            width: 7px;
-            height: 10px;
-            border-radius: 45% 45% 50% 50% / 55% 55% 45% 45%;
-            flex-shrink: 0;
-            position: relative;
-            transition: transform 0.2s, filter 0.2s;
-            animation: bulbGlow 2s ease-in-out infinite;
         }
 
-        .garland-top .garland-bulb::before,
-        .garland-bottom .garland-bulb::before {
-            content: '';
-            position: absolute;
-            width: 1px; height: 5px;
-            left: 50%; transform: translateX(-50%);
-            background: rgba(120, 100, 60, 0.5);
-        }
-        .garland-top .garland-bulb::before { top: -5px; }
-        .garland-bottom .garland-bulb::before { bottom: -5px; top: auto; }
-
-        .garland-left .garland-bulb::before,
-        .garland-right .garland-bulb::before {
-            content: '';
-            position: absolute;
-            width: 5px; height: 1px;
-            top: 50%; transform: translateY(-50%);
-            background: rgba(120, 100, 60, 0.5);
-        }
-        .garland-left .garland-bulb::before { left: -5px; }
-        .garland-right .garland-bulb::before { left: -5px; }
-
-        @keyframes bulbGlow {
-            0%, 100% { opacity: 1; filter: brightness(1.15); }
-            50% { opacity: 0.25; filter: brightness(0.5); }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card-hover);
         }
 
-        /* Célébration */
-        body.celebrating .garland-bulb {
-            animation: bulbCelebration 0.2s ease-in-out infinite !important;
-            transform: scale(1.6);
-        }
-
-        @keyframes bulbCelebration {
-            0%, 100% { opacity: 1; filter: brightness(3) saturate(2); transform: scale(1.6); }
-            50% { opacity: 0.2; filter: brightness(0.6); transform: scale(0.8); }
-        }
-
-        body.celebrating .garland-top::after,
-        body.celebrating .garland-bottom::after {
-            height: 3px;
-            background: linear-gradient(90deg, #ff0044, #ffdd00, #00ff88, #00ccff, #ff00cc, #ff0044);
-            background-size: 300% 100%;
-            animation: wireGlowH 0.6s linear infinite;
-            box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
-        }
-
-        body.celebrating .garland-left::after,
-        body.celebrating .garland-right::after {
-            width: 3px;
-            background: linear-gradient(180deg, #ff0044, #ffdd00, #00ff88, #00ccff, #ff00cc, #ff0044);
-            background-size: 100% 300%;
-            animation: wireGlowV 0.6s linear infinite;
-            box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
-        }
-
-        @keyframes wireGlowH { from { background-position: 0% 0%; } to { background-position: 300% 0%; } }
-        @keyframes wireGlowV { from { background-position: 0% 0%; } to { background-position: 0% 300%; } }
-
-        /* ============ CONTENEUR ============ */
-        .game-container {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 48px 20px 80px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* ============ HEADER ============ */
-        .game-header {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-
-        .game-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            color: var(--accent);
-            text-shadow: 0 0 30px rgba(212, 160, 23, 0.25);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .gold-display {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 7px 20px;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 1.05rem;
-        }
-
-        .gold-display i { color: var(--accent); font-size: 1.15rem; }
-
-        .gold-amount {
-            color: var(--accent-glow);
-            min-width: 50px;
-            text-align: right;
-            transition: color 0.3s;
-        }
-        .gold-amount.negative { color: var(--danger); }
-
-        /* ============ CATÉGORIE ============ */
-        .category-display {
-            text-align: center;
-            margin-bottom: 18px;
-            font-size: 0.9rem;
-            color: var(--muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        /* ============ PHRASE ============ */
-        .phrase-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 26px;
-            min-height: 54px;
-            padding: 18px 14px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-
-        .letter-box {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 42px;
-            border: 1px solid rgba(253, 246, 227, 0.3);
-            border-radius: 3px;
-            font-family: 'Cinzel', serif;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--fg);
-            background: rgba(253, 246, 227, 0.03);
-            transition: all 0.3s ease;
-        }
-
-        .letter-box.apostrophe {
-            border-color: rgba(253, 246, 227, 0.12);
-            background: transparent;
-            color: var(--muted);
-            font-size: 1rem;
-        }
-
-        .letter-box.revealed {
-            background: rgba(212, 160, 23, 0.13);
-            border-color: rgba(212, 160, 23, 0.45);
-            color: var(--accent-glow);
-            animation: revealPop 0.4s ease-out;
-        }
-
-        .letter-box.won {
-            background: rgba(39, 174, 96, 0.18);
-            border-color: rgba(39, 174, 96, 0.5);
-            color: #5dde9e;
-            animation: none;
-        }
-
-        @keyframes revealPop {
-            0% { transform: scale(1.25); background: rgba(212, 160, 23, 0.35); }
-            100% { transform: scale(1); }
-        }
-
-        .space-gap { display: inline-block; width: 18px; }
-
-        /* ============ SECTION ROUE ============ */
-        .wheel-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 22px;
-        }
-
-        .wheel-wrapper {
-            position: relative;
-            width: 270px;
-            height: 270px;
-            margin-bottom: 14px;
-        }
-
-        @media (min-width: 560px) {
-            .wheel-wrapper { width: 340px; height: 340px; }
-        }
-
-        #wheelCanvas {
+        .card-img {
             width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 18px rgba(212, 160, 23, 0.18));
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 13px solid transparent;
-            border-right: 13px solid transparent;
-            border-top: 26px solid var(--accent);
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
-            z-index: 5;
-        }
-
-        .spin-btn {
-            background: linear-gradient(135deg, #d4a017, #b8860b);
-            color: #1a1510;
-            border: none;
-            padding: 11px 34px;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .spin-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 160, 23, 0.35);
-        }
-        .spin-btn:active:not(:disabled) { transform: translateY(0); }
-        .spin-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-        .wheel-result {
-            margin-top: 10px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            min-height: 26px;
-            text-align: center;
-            line-height: 1.3;
-        }
-        .wheel-result.positive { color: var(--accent-glow); }
-        .wheel-result.negative { color: var(--danger); }
-
-        /* ============ CLAVIER ============ */
-        .keyboard-section { margin-bottom: 14px; }
-
-        .keyboard-label {
-            font-size: 0.78rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 7px;
-            text-align: center;
-        }
-
-        .vowel-cost-note {
-            font-size: 0.72rem;
-            color: var(--muted);
-            text-align: center;
-            margin-bottom: 6px;
-            font-style: italic;
-            line-height: 1.4;
-        }
-
-        .keyboard-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 5px;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .key-btn {
-            width: 37px;
-            height: 40px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--fg);
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 0.92rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .key-btn:hover:not(:disabled) {
-            background: rgba(212, 160, 23, 0.18);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .key-btn:disabled { opacity: 0.18; cursor: not-allowed; transform: none !important; }
-        .key-btn.vowel { border-color: rgba(192, 57, 43, 0.35); }
-        .key-btn.vowel:hover:not(:disabled) { background: rgba(192, 57, 43, 0.18); border-color: #c0392b; }
-
-        .key-btn.used-correct {
-            opacity: 1 !important;
-            background: rgba(39, 174, 96, 0.2) !important;
-            border-color: rgba(39, 174, 96, 0.5) !important;
-            color: #5dde9e !important;
-            cursor: default;
-        }
-
-        .key-btn.used-wrong {
-            opacity: 1 !important;
-            background: rgba(192, 57, 43, 0.12) !important;
-            border-color: rgba(192, 57, 43, 0.25) !important;
-            color: #a05050 !important;
-            cursor: default;
-        }
-
-        /* ============ ACTIONS ============ */
-        .actions-section {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--fg);
-            padding: 9px 22px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 0.88rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover:not(:disabled) {
-            border-color: var(--accent);
-            background: rgba(212, 160, 23, 0.1);
-        }
-        .action-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-        .action-btn i { margin-right: 5px; }
-
-        /* ============ LIGNE DU BAS ============ */
-        .info-line {
-            text-align: center;
-            font-size: 0.84rem;
-            color: var(--muted);
-            margin-bottom: 12px;
-            min-height: 20px;
-            line-height: 1.4;
-        }
-
-        /* ============ RETOUR AU VILLAGE — ROSE ============ */
-        .back-btn {
+            height: 190px;
+            object-fit: cover;
             display: block;
-            width: 100%;
-            max-width: 280px;
-            margin: 0 auto;
-            padding: 11px;
-            background: transparent;
-            border: 1px solid var(--pink);
-            color: var(--pink-light);
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 0.88rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
         }
 
-        .back-btn:hover {
-            background: rgba(232, 67, 147, 0.12);
-            border-color: var(--pink-light);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(232, 67, 147, 0.25);
-        }
-        .back-btn i { margin-right: 6px; }
-
-        /* ============ TOASTS ============ */
-        .toast-container {
-            position: fixed;
-            top: 44px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
+        .card-body {
+            padding: 22px 24px 26px;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-            width: 90%;
-            max-width: 420px;
         }
 
-        .toast {
-            background: rgba(20, 18, 14, 0.95);
-            border: 1px solid var(--border);
-            color: var(--fg);
-            padding: 11px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.86rem;
-            text-align: center;
-            animation: toastIn 0.35s ease-out, toastOut 0.4s ease-in forwards;
-            animation-delay: 0s, 2.6s;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.6);
-            line-height: 1.35;
-        }
-
-        .toast.success { border-color: var(--success); color: #5dde9e; }
-        .toast.error { border-color: var(--danger); color: #e07070; }
-        .toast.info { border-color: var(--accent); color: var(--accent-glow); }
-
-        @keyframes toastIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
-
-        /* ============ MODAL ============ */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.72);
-            z-index: 1500;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; }
-
-        .modal-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            animation: modalIn 0.3s ease-out;
-        }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
-
-        .modal-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            font-size: 1.35rem;
+        .card-body h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3rem;
             color: var(--accent);
-            margin-bottom: 14px;
+            margin-bottom: 8px;
         }
 
-        .modal-input {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--fg);
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            outline: none;
-            margin-bottom: 16px;
-        }
-        .modal-input:focus { border-color: var(--accent); }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .card-body p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex: 1;
         }
 
-        .modal-btn {
-            padding: 9px 22px;
-            border-radius: 8px;
+        .card-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--accent);
+            color: #fff;
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
             font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
             border: none;
-        }
-        .modal-btn.primary { background: linear-gradient(135deg, #d4a017, #b8860b); color: #1a1510; }
-        .modal-btn.secondary { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-        .modal-btn:hover { transform: translateY(-1px); }
-
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 480px) {
-            .letter-box { width: 24px; height: 32px; font-size: 0.82rem; }
-            .space-gap { width: 10px; }
-            .key-btn { width: 30px; height: 34px; font-size: 0.78rem; }
-            .game-container { padding: 40px 8px 70px; }
-            .phrase-container { padding: 12px 8px; gap: 3px; }
-            .spin-btn { padding: 10px 24px; font-size: 0.9rem; }
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.25s ease, transform 0.2s ease;
+            align-self: flex-start;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .garland-bulb { animation: none !important; opacity: 0.7; }
-            .letter-box.revealed { animation: none !important; }
-            .toast { animation: none !important; opacity: 1; }
-            .modal-box { animation: none !important; }
+        .card:hover .card-btn {
+            background: var(--accent-hover);
+            transform: scale(1.04);
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 680px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            header {
+                padding: 40px 16px 48px;
+            }
+
+            main {
+                padding: 0 16px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="toast-container" id="toastContainer"></div>
-
-    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
-        <div class="modal-box">
-            <div class="modal-title" id="modalTitle"></div>
-            <div id="modalContent"></div>
-            <div class="modal-actions" id="modalActions"></div>
+    <!-- ====== HEADER ====== -->
+    <header>
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
         </div>
-    </div>
+        <h1>Le Village du hasard</h1>
+        <p>Jeux de cartes, dés, roue et mots… Tout repose sur la chance !</p>
+    </header>
 
-    <main class="game-container">
-        <header class="game-header">
-            <h1 class="game-title">La Roue de la Fortune</h1>
-            <div class="gold-display" aria-live="polite">
-                <i class="fas fa-coins" aria-hidden="true"></i>
-                <span>Pièces d'or :</span>
-                <span class="gold-amount" id="goldDisplay">0</span>
-            </div>
-        </header>
+    <!-- ====== CONTENU ====== -->
+    <main>
+        <div class="grid">
 
-        <div class="category-display" id="categoryDisplay" aria-live="polite">Chargement...</div>
+            <!-- Carte 1 – Vitrine enchantée -->
+            <a href="https://pierreg78-maker.github.io/vitrine-enchantee/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/vitrine-enchantee/600/380.jpg" alt="Vitrine enchantée">
+                <div class="card-body">
+                    <h2>Vitrine enchantée</h2>
+                    <p>Une vitrine magique qui révèle ses mystères au gré de votre curiosité. Cliquez, explorez et laissez-vous surprendre par ce que l'inattendu réserve.</p>
+                    <span class="card-btn">Découvrir</span>
+                </div>
+            </a>
 
-        <div class="phrase-container" id="phraseContainer" aria-label="Expression à deviner"></div>
+            <!-- Carte 2 – Mots mêlés -->
+            <a href="https://pierreg78-maker.github.io/mots-meles/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/mots-meles-grille/600/380.jpg" alt="Mots mêlés">
+                <div class="card-body">
+                    <h2>Mots mêlés</h2>
+                    <p>Cherchez et trouvez les mots cachés dans la grille ! Un jeu de patience et d'observation où chaque partie mêlehasard et réflexion.</p>
+                    <span class="card-btn">Jouer</span>
+                </div>
+            </a>
 
-        <section class="wheel-section" aria-label="Roue de la fortune">
-            <div class="wheel-wrapper">
-                <div class="wheel-pointer" aria-hidden="true"></div>
-                <canvas id="wheelCanvas" width="680" height="680"></canvas>
-            </div>
-            <button class="spin-btn" id="spinBtn" aria-label="Faire tourner la roue">
-                <i class="fas fa-sync-alt" aria-hidden="true"></i> Faire tourner la roue
-            </button>
-            <div class="wheel-result" id="wheelResult" aria-live="polite"></div>
-        </section>
+            <!-- Carte 3 – Loto -->
+            <a href="https://pierreg78-maker.github.io/loto/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/loto-boules/600/380.jpg" alt="Loto">
+                <div class="card-body">
+                    <h2>Loto</h2>
+                    <p>Tirez les numéros et cochez vos cartons ! Le pur hasard décide du gagnant. Serez-vous le premier à completer une quine ou un carton plein ?</p>
+                    <span class="card-btn">Jouer</span>
+                </div>
+            </a>
 
-        <section class="keyboard-section" aria-label="Clavier des consonnes">
-            <div class="keyboard-label">Consonnes</div>
-            <div class="keyboard-grid" id="consonantGrid"></div>
-        </section>
+            <!-- Carte 4 – Blackjack -->
+            <a href="https://pierreg78-maker.github.io/blackjack/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/blackjack-cards/600/380.jpg" alt="Blackjack">
+                <div class="card-body">
+                    <h2>Blackjack</h2>
+                    <p>Rapprochez-vous de 21 sans les dépasser ! Distribuez les cartes, prenez les bonnes décisions… et croisez les doigts pour que la chance vous sourit.</p>
+                    <span class="card-btn">Jouer</span>
+                </div>
+            </a>
 
-        <section class="keyboard-section" aria-label="Clavier des voyelles">
-            <div class="keyboard-label">Voyelles <span style="color:var(--danger);font-weight:800;">(5 PO / occurrence)</span></div>
-            <div class="vowel-cost-note">Le coût est de 5 pièces d'or par occurrence de la voyelle dans l'expression. Le solde peut devenir négatif.</div>
-            <div class="keyboard-grid" id="vowelGrid"></div>
-        </section>
+            <!-- Carte 5 – 421 -->
+            <a href="https://pierreg78-maker.github.io/421/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/dice-421-game/600/380.jpg" alt="421">
+                <div class="card-body">
+                    <h2>421</h2>
+                    <p>Lancez les dés et tentez d'obtenir le fameux 4-2-1 ! Un classique des jeux de dés où chaque lancer peut tout changer. À vous de jouer !</p>
+                    <span class="card-btn">Jouer</span>
+                </div>
+            </a>
 
-        <!-- BOUTONS D'ACTIONS : proposition + nouvelle partie -->
-        <section class="actions-section">
-            <button class="action-btn" id="guessBtn" disabled aria-label="Faire une proposition">
-                <i class="fas fa-lightbulb" aria-hidden="true"></i> Faire une proposition
-            </button>
-            <button class="action-btn" id="newGameBtn" aria-label="Nouvelle partie">
-                <i class="fas fa-redo" aria-hidden="true"></i> Nouvelle partie
-            </button>
-        </section>
+            <!-- Carte 6 – La Roue de la Fortune -->
+            <a href="https://pierreg78-maker.github.io/la_roue_de_la_fortune/" class="card">
+                <img class="card-img" src="https://picsum.photos/seed/roue-fortune-spin/600/380.jpg" alt="La Roue de la Fortune">
+                <div class="card-body">
+                    <h2>La Roue de la Fortune</h2>
+                    <p>Version test, gains non comptabilisés. Faites tourner la roue et laissez le destin choisir ! Chaque segment cache une surprise. Rien ne dépend de vous… et c'est tout le charme !</p>
+                    <span class="card-btn">Jouer</span>
+                </div>
+            </a>
 
-        <div class="info-line" id="infoLine" aria-live="polite">Faites tourner la roue pour commencer !</div>
-
-        <button class="back-btn" id="backBtn" aria-label="Retour au village">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i> Retour au Village
-        </button>
+        </div>
     </main>
 
-    <script>
-        /* ============================================
-           EXPRESSIONS
-        ============================================ */
-        const phrases = [
-            { text: "Avoir le cafard", cat: "Expression courante" },
-            { text: "Se creuser la cervelle", cat: "Expression courante" },
-            { text: "Avoir un chat dans la gorge", cat: "Expression courante" },
-            { text: "Couter les yeux de la tete", cat: "Expression courante" },
-            { text: "Avoir le vent en poupe", cat: "Expression courante" },
-            { text: "Mettre les pieds dans le plat", cat: "Expression courante" },
-            { text: "Perdre la boule", cat: "Expression courante" },
-            { text: "Avoir le coeur sur la main", cat: "Expression courante" },
-            { text: "Tourner autour du pot", cat: "Expression courante" },
-            { text: "Avoir la frite", cat: "Expression courante" },
-            { text: "Poser un lapin", cat: "Expression courante" },
-            { text: "Avoir d'autres chats a fouetter", cat: "Expression courante" },
-            { text: "Revenir a ses moutons", cat: "Expression courante" },
-            { text: "Avaler des couleuvres", cat: "Expression courante" },
-            { text: "Faire l'autruche", cat: "Expression courante" },
-            { text: "Avoir une faim de loup", cat: "Expression courante" },
-            { text: "Etre un cordon-bleu", cat: "Expression courante" },
-            { text: "Chanter comme une casserole", cat: "Expression courante" },
-            { text: "Poule mouillee", cat: "Expression courante" },
-            { text: "Quand les poules auront des dents", cat: "Expression courante" },
-            { text: "Voir la vie en rose", cat: "Expression courante" },
-            { text: "Etre blanc comme neige", cat: "Expression courante" },
-            { text: "Raconter des salades", cat: "Expression courante" },
-            { text: "Pedaler dans la choucroute", cat: "Expression courante" },
-            { text: "C'est la fin des haricots", cat: "Expression courante" },
-            { text: "Haut comme trois pommes", cat: "Expression courante" },
-            { text: "Etre dans de beaux draps", cat: "Expression courante" },
-            { text: "Vendre la meche", cat: "Expression courante" },
-            { text: "Mettre de l'eau dans son vin", cat: "Expression courante" },
-            { text: "Appeler un chat un chat", cat: "Expression courante" },
-            { text: "Battre le fer tant qu'il est chaud", cat: "Expression courante" },
-            { text: "Avoir le pain sur la planche", cat: "Expression courante" },
-            { text: "Prendre le taureau par les cornes", cat: "Expression courante" },
-            { text: "Jeter l'eponge", cat: "Expression courante" },
-            { text: "Ne pas etre ne de la derniere pluie", cat: "Expression courante" },
-            { text: "Faire d'une pierre deux coups", cat: "Expression courante" },
-            { text: "Mettre la main a la pate", cat: "Expression courante" },
-            { text: "Broyer du noir", cat: "Expression courante" },
-            { text: "Passer l'eponge", cat: "Expression courante" },
-            { text: "Tirer les vers du nez", cat: "Expression courante" },
-            { text: "C'est la mer a boire", cat: "Expression courante" },
-            { text: "Se mettre le doigt dans l'oeil", cat: "Expression courante" },
-            { text: "Avoir le dos large", cat: "Expression courante" },
-            { text: "Tomber des nues", cat: "Expression courante" },
-            { text: "Vivre d'amour et d'eau fraiche", cat: "Expression courante" },
-            { text: "Avoir un poil dans la main", cat: "Expression courante" },
-            { text: "Chercher midi a quatorze heures", cat: "Expression courante" },
-            { text: "Courir plusieurs lievres a la fois", cat: "Expression courante" },
-            { text: "Crier sur tous les toits", cat: "Expression courante" },
-            { text: "Etre loge a la meme enseigne", cat: "Expression courante" }
-        ];
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <p>&copy; 2025 Le Village du hasard &mdash; Tous droits réservés</p>
+    </footer>
 
-        const phrasesDisplay = [
-            "Avoir le cafard",
-            "Se creuser la cervelle",
-            "Avoir un chat dans la gorge",
-            "Coûter les yeux de la tête",
-            "Avoir le vent en poupe",
-            "Mettre les pieds dans le plat",
-            "Perdre la boule",
-            "Avoir le cœur sur la main",
-            "Tourner autour du pot",
-            "Avoir la frite",
-            "Poser un lapin",
-            "Avoir d'autres chats à fouetter",
-            "Revenir à ses moutons",
-            "Avaler des couleuvres",
-            "Faire l'autruche",
-            "Avoir une faim de loup",
-            "Être un cordon-bleu",
-            "Chanter comme une casserole",
-            "Poule mouillée",
-            "Quand les poules auront des dents",
-            "Voir la vie en rose",
-            "Être blanc comme neige",
-            "Raconter des salades",
-            "Pédaler dans la choucroute",
-            "C'est la fin des haricots",
-            "Haut comme trois pommes",
-            "Être dans de beaux draps",
-            "Vendre la mèche",
-            "Mettre de l'eau dans son vin",
-            "Appeler un chat un chat",
-            "Battre le fer tant qu'il est chaud",
-            "Avoir le pain sur la planche",
-            "Prendre le taureau par les cornes",
-            "Jeter l'éponge",
-            "Ne pas être né de la dernière pluie",
-            "Faire d'une pierre deux coups",
-            "Mettre la main à la pâte",
-            "Broyer du noir",
-            "Passer l'éponge",
-            "Tirer les vers du nez",
-            "C'est la mer à boire",
-            "Se mettre le doigt dans l'œil",
-            "Avoir le dos large",
-            "Tomber des nues",
-            "Vivre d'amour et d'eau fraîche",
-            "Avoir un poil dans la main",
-            "Chercher midi à quatorze heures",
-            "Courir plusieurs lièvres à la fois",
-            "Crier sur tous les toits",
-            "Être logé à la même enseigne"
-        ];
-
-        /* ============================================
-           ROUE — 16 SEGMENTS (2 BANQUEROUTE opposés)
-           Indices 7 et 15 = 8 segments d'écart = opposés
-        ============================================ */
-        const wheelSegments = [
-            { value: 100,  color: "#c0392b", label: "100" },         /* 0 */
-            { value: 200,  color: "#e67e22", label: "200" },         /* 1 */
-            { value: 300,  color: "#f1c40f", label: "300" },         /* 2 */
-            { value: 400,  color: "#27ae60", label: "400" },         /* 3 */
-            { value: 500,  color: "#1abc9c", label: "500" },         /* 4 */
-            { value: 600,  color: "#d35400", label: "600" },         /* 5 */
-            { value: 700,  color: "#16a085", label: "700" },         /* 6 */
-            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" }, /* 7 */
-            { value: 800,  color: "#e74c3c", label: "800" },         /* 8 */
-            { value: 900,  color: "#f39c12", label: "900" },         /* 9 */
-            { value: 1000, color: "#2ecc71", label: "1000" },        /* 10 */
-            { value: 1500, color: "#e67e22", label: "1500" },        /* 11 */
-            { value: 2000, color: "#c0392b", label: "2000" },        /* 12 */
-            { value: 50,   color: "#4a5568", label: "50" },          /* 13 */
-            { value: 10,   color: "#34495e", label: "10" },          /* 14 */
-            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" }  /* 15 */
-        ];
-
-        const VOWELS = ["A", "E", "I", "O", "U", "Y"];
-        const VOWEL_COST_PER_OCCURRENCE = 5;
-
-        /* ============================================
-           ÉTAT
-        ============================================ */
-        let currentPhrase = "";
-        let currentDisplayPhrase = "";
-        let currentCategory = "";
-        let revealedLetters = new Set();
-        let usedLetters = new Set();
-        let goldBalance = 0;
-        let currentWheelValue = null;
-        let isSpinning = false;
-        let canChooseConsonant = false;
-        let gameWon = false;
-        let wheelAngle = 0;
-        let spinVelocity = 0;
-        let celebrationInterval = null;
-
-        /* ============================================
-           DOM
-        ============================================ */
-        const goldDisplayEl     = document.getElementById("goldDisplay");
-        const categoryDisplayEl = document.getElementById("categoryDisplay");
-        const phraseContainerEl = document.getElementById("phraseContainer");
-        const spinBtnEl         = document.getElementById("spinBtn");
-        const guessBtnEl        = document.getElementById("guessBtn");
-        const wheelResultEl     = document.getElementById("wheelResult");
-        const consonantGridEl   = document.getElementById("consonantGrid");
-        const vowelGridEl       = document.getElementById("vowelGrid");
-        const newGameBtnEl      = document.getElementById("newGameBtn");
-        const infoLineEl        = document.getElementById("infoLine");
-        const backBtnEl         = document.getElementById("backBtn");
-        const canvasEl          = document.getElementById("wheelCanvas");
-        const ctx               = canvasEl.getContext("2d");
-        const toastContainerEl  = document.getElementById("toastContainer");
-        const modalOverlayEl    = document.getElementById("modalOverlay");
-        const modalTitleEl      = document.getElementById("modalTitle");
-        const modalContentEl    = document.getElementById("modalContent");
-        const modalActionsEl    = document.getElementById("modalActions");
-
-        /* ============================================
-           UTILITAIRES
-        ============================================ */
-        function normalizeLetter(ch) {
-            return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        }
-
-        function isAlpha(ch) {
-            const n = normalizeLetter(ch);
-            return n >= "A" && n <= "Z";
-        }
-
-        function countInPhrase(letter) {
-            let n = 0;
-            for (const ch of currentPhrase) {
-                if (normalizeLetter(ch) === letter) n++;
-            }
-            return n;
-        }
-
-        /* ============================================
-           GUIRLANDES
-        ============================================ */
-        function createGarlands() {
-            const bulbColors = [
-                "#ff4444", "#ffdd44", "#44ff88", "#ff8844",
-                "#44ddff", "#ff66aa", "#aaff44", "#ffaa22"
-            ];
-            const sides = ["top", "bottom", "left", "right"];
-
-            sides.forEach(side => {
-                const container = document.createElement("div");
-                container.className = "garland garland-" + side;
-                container.setAttribute("aria-hidden", "true");
-
-                let count;
-                if (side === "top" || side === "bottom") {
-                    count = Math.max(8, Math.floor(window.innerWidth / 30));
-                } else {
-                    count = Math.max(6, Math.floor(window.innerHeight / 30));
-                }
-
-                for (let i = 0; i < count; i++) {
-                    const bulb = document.createElement("div");
-                    bulb.className = "garland-bulb";
-                    const col = bulbColors[i % bulbColors.length];
-                    bulb.style.backgroundColor = col;
-                    bulb.style.boxShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
-                    bulb.style.animationDelay = (i * 0.18 % 2).toFixed(2) + "s";
-                    bulb.style.animationDuration = (1.8 + (i % 3) * 0.4).toFixed(1) + "s";
-                    bulb.dataset.origColor = col;
-                    bulb.dataset.origShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
-                    container.appendChild(bulb);
-                }
-
-                document.body.appendChild(container);
-            });
-        }
-
-        function restoreGarlandColors() {
-            document.querySelectorAll(".garland-bulb").forEach(bulb => {
-                bulb.style.backgroundColor = bulb.dataset.origColor;
-                bulb.style.boxShadow = bulb.dataset.origShadow;
-            });
-        }
-
-        function startCelebration() {
-            document.body.classList.add("celebrating");
-
-            const celebrationColors = [
-                "#ff0044", "#ffdd00", "#00ff88", "#ff6600",
-                "#00ccff", "#ff00cc", "#aaff00", "#ffaa00", "#ffffff"
-            ];
-            const bulbs = document.querySelectorAll(".garland-bulb");
-            let tick = 0;
-
-            celebrationInterval = setInterval(() => {
-                tick++;
-                bulbs.forEach((bulb, i) => {
-                    const col = celebrationColors[(i + tick) % celebrationColors.length];
-                    bulb.style.backgroundColor = col;
-                    bulb.style.boxShadow = "0 0 12px 5px " + col + ", 0 0 30px 10px " + col + "88";
-                });
-            }, 100);
-
-            setTimeout(() => {
-                clearInterval(celebrationInterval);
-                celebrationInterval = null;
-                document.body.classList.remove("celebrating");
-                restoreGarlandColors();
-            }, 5000);
-        }
-
-        /* ============================================
-           ROUE — DESSIN
-        ============================================ */
-        const segCount = wheelSegments.length;
-        const segAngle = (2 * Math.PI) / segCount;
-
-        function drawWheel() {
-            const w = canvasEl.width;
-            const h = canvasEl.height;
-            const cx = w / 2;
-            const cy = h / 2;
-            const radius = Math.max(10, Math.min(cx, cy) - 22);
-
-            ctx.clearRect(0, 0, w, h);
-
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius + 14, 0, 2 * Math.PI);
-            ctx.strokeStyle = "#d4a017";
-            ctx.lineWidth = 4;
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius + 8, 0, 2 * Math.PI);
-            ctx.strokeStyle = "#8b6914";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            for (let i = 0; i < segCount; i++) {
-                const start = wheelAngle + i * segAngle;
-                const end = start + segAngle;
-                const seg = wheelSegments[i];
-
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, radius, start, end);
-                ctx.closePath();
-                ctx.fillStyle = seg.color;
-                ctx.fill();
-
-                ctx.strokeStyle = "rgba(0,0,0,0.35)";
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                ctx.save();
-                ctx.translate(cx, cy);
-                ctx.rotate(start + segAngle / 2);
-                ctx.textAlign = "right";
-                ctx.textBaseline = "middle";
-
-                if (seg.value === "BANQUEROUTE") {
-                    ctx.font = "bold 17px Cinzel, serif";
-                    ctx.fillStyle = "#ff4444";
-                    ctx.fillText("BANQUEROUTE", radius - 14, 0);
-                } else {
-                    ctx.font = "bold 32px Cinzel, serif";
-                    ctx.fillStyle = "#ffffff";
-                    ctx.shadowColor = "rgba(0,0,0,0.5)";
-                    ctx.shadowBlur = 4;
-                    ctx.fillText(seg.label, radius - 20, 0);
-                    ctx.shadowBlur = 0;
-                }
-
-                ctx.restore();
-            }
-
-            const depthGrad = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius);
-            depthGrad.addColorStop(0, "rgba(255,255,255,0.07)");
-            depthGrad.addColorStop(0.6, "rgba(0,0,0,0)");
-            depthGrad.addColorStop(1, "rgba(0,0,0,0.25)");
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-            ctx.fillStyle = depthGrad;
-            ctx.fill();
-
-            for (let i = 0; i < segCount; i++) {
-                const a = wheelAngle + i * segAngle;
-                const dx = cx + Math.cos(a) * (radius - 3);
-                const dy = cy + Math.sin(a) * (radius - 3);
-                ctx.beginPath();
-                ctx.arc(dx, dy, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = "#d4a017";
-                ctx.fill();
-                ctx.strokeStyle = "#8b6914";
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
-
-            const hubGrad = ctx.createRadialGradient(cx - 5, cy - 5, 0, cx, cy, 34);
-            hubGrad.addColorStop(0, "#f5c842");
-            hubGrad.addColorStop(0.6, "#d4a017");
-            hubGrad.addColorStop(1, "#8b6914");
-            ctx.beginPath();
-            ctx.arc(cx, cy, 32, 0, 2 * Math.PI);
-            ctx.fillStyle = hubGrad;
-            ctx.fill();
-            ctx.strokeStyle = "#6b4f10";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
-            ctx.fillStyle = "#1a1510";
-            ctx.fill();
-        }
-
-        function getWinningSegment() {
-            const pointerAngle = -Math.PI / 2;
-            let norm = (pointerAngle - wheelAngle) % (2 * Math.PI);
-            if (norm < 0) norm += 2 * Math.PI;
-            const idx = Math.floor(norm / segAngle) % segCount;
-            return wheelSegments[idx];
-        }
-
-        /* ============================================
-           ROUE — ANIMATION
-        ============================================ */
-        function spinWheel() {
-            if (isSpinning || gameWon) return;
-
-            /* Si le joueur relance alors qu'il avait une valeur de roue, il la perd */
-            if (canChooseConsonant) {
-                canChooseConsonant = false;
-                currentWheelValue = null;
-                infoLineEl.textContent = "Valeur de roue perdue. La roue tourne...";
-            } else {
-                infoLineEl.textContent = "La roue tourne...";
-            }
-
-            isSpinning = true;
-            spinBtnEl.disabled = true;
-            guessBtnEl.disabled = true;
-            wheelResultEl.textContent = "";
-            wheelResultEl.className = "wheel-result";
-
-            spinVelocity = 0.22 + Math.random() * 0.22;
-
-            function animate() {
-                wheelAngle += spinVelocity;
-                spinVelocity *= 0.984;
-                drawWheel();
-
-                if (spinVelocity > 0.001) {
-                    requestAnimationFrame(animate);
-                } else {
-                    isSpinning = false;
-                    handleWheelResult(getWinningSegment());
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        function handleWheelResult(segment) {
-            currentWheelValue = segment.value;
-
-            if (segment.value === "BANQUEROUTE") {
-                goldBalance = 0;
-                updateGoldDisplay();
-                wheelResultEl.textContent = "Banqueroute ! Solde remis a zero.";
-                wheelResultEl.className = "wheel-result negative";
-                showToast("Banqueroute ! Toutes vos pieces perdues.", "error");
-                infoLineEl.textContent = "Banqueroute ! Faites tourner la roue a nouveau.";
-                currentWheelValue = null;
-                spinBtnEl.disabled = false;
-
-            } else {
-                wheelResultEl.textContent = segment.value + " pieces d'or ! Choisissez une consonne.";
-                wheelResultEl.className = "wheel-result positive";
-                infoLineEl.textContent = "Roue : " + segment.value + " PO. Choisissez une consonne.";
-                canChooseConsonant = true;
-            }
-
-            updateKeyboard();
-        }
-
-        /* ============================================
-           PHRASE
-        ============================================ */
-        function renderPhrase() {
-            phraseContainerEl.innerHTML = "";
-            for (const char of currentPhrase) {
-                if (char === " ") {
-                    const gap = document.createElement("span");
-                    gap.className = "space-gap";
-                    phraseContainerEl.appendChild(gap);
-                } else if (char === "'") {
-                    const box = document.createElement("span");
-                    box.className = "letter-box apostrophe";
-                    box.textContent = "'";
-                    phraseContainerEl.appendChild(box);
-                } else {
-                    const norm = normalizeLetter(char);
-                    const box = document.createElement("span");
-                    box.className = "letter-box";
-
-                    if (revealedLetters.has(norm)) {
-                        box.classList.add("revealed");
-                        box.textContent = char;
-                    }
-                    if (gameWon) {
-                        box.classList.add("won");
-                        box.textContent = char;
-                    }
-
-                    phraseContainerEl.appendChild(box);
-                }
-            }
-        }
-
-        /* ============================================
-           CLAVIER
-        ============================================ */
-        function buildKeyboard() {
-            consonantGridEl.innerHTML = "";
-            vowelGridEl.innerHTML = "";
-
-            "BCDFGHJKLMNPQRSTVWXZ".split("").forEach(letter => {
-                const btn = document.createElement("button");
-                btn.className = "key-btn";
-                btn.textContent = letter;
-                btn.dataset.letter = letter;
-                btn.disabled = true;
-                btn.setAttribute("aria-label", "Consonne " + letter);
-                btn.addEventListener("click", () => chooseConsonant(letter));
-                consonantGridEl.appendChild(btn);
-            });
-
-            VOWELS.forEach(letter => {
-                const btn = document.createElement("button");
-                btn.className = "key-btn vowel";
-                btn.textContent = letter;
-                btn.dataset.letter = letter;
-                btn.disabled = true;
-                btn.setAttribute("aria-label", "Voyelle " + letter);
-                btn.addEventListener("click", () => chooseVowel(letter));
-                vowelGridEl.appendChild(btn);
-            });
-        }
-
-        function updateKeyboard() {
-            consonantGridEl.querySelectorAll(".key-btn").forEach(btn => {
-                const l = btn.dataset.letter;
-                if (usedLetters.has(l)) {
-                    btn.disabled = true;
-                    btn.classList.remove("vowel");
-                    btn.classList.add(revealedLetters.has(l) ? "used-correct" : "used-wrong");
-                } else {
-                    btn.disabled = !(canChooseConsonant && typeof currentWheelValue === "number");
-                    btn.classList.remove("used-correct", "used-wrong");
-                }
-            });
-
-            vowelGridEl.querySelectorAll(".key-btn").forEach(btn => {
-                const l = btn.dataset.letter;
-                if (usedLetters.has(l)) {
-                    btn.disabled = true;
-                    btn.classList.add(revealedLetters.has(l) ? "used-correct" : "used-wrong");
-                } else {
-                    btn.disabled = isSpinning || gameWon;
-                    btn.classList.remove("used-correct", "used-wrong");
-                }
-            });
-
-            /* Le bouton proposition est actif dès que la roue ne tourne pas et partie non gagnée */
-            guessBtnEl.disabled = isSpinning || gameWon;
-
-            /* Spin : désactivé si en spin, si on peut encore choisir une consonne, ou si gagné */
-            spinBtnEl.disabled = isSpinning || gameWon;
-        }
-
-        /* ============================================
-           CONSONNE
-        ============================================ */
-        function chooseConsonant(letter) {
-            if (!canChooseConsonant || usedLetters.has(letter) || typeof currentWheelValue !== "number") return;
-
-            usedLetters.add(letter);
-            const count = countInPhrase(letter);
-
-            if (count > 0) {
-                revealedLetters.add(letter);
-                const earned = currentWheelValue * count;
-                goldBalance += earned;
-                updateGoldDisplay();
-                showToast(count + " \"" + letter + "\" trouve" + (count > 1 ? "s" : "") + " ! +" + earned + " PO", "success");
-                infoLineEl.textContent = "+" + earned + " PO gagnes ! Continuez.";
-                renderPhrase();
-                checkWin();
-            } else {
-                showToast("Pas de \"" + letter + "\" dans l'expression.", "error");
-                infoLineEl.textContent = "Pas de \"" + letter + "\". Faites tourner la roue.";
-                canChooseConsonant = false;
-                currentWheelValue = null;
-            }
-
-            updateKeyboard();
-        }
-
-        /* ============================================
-           VOYELLE
-        ============================================ */
-        function chooseVowel(letter) {
-            if (usedLetters.has(letter) || isSpinning || gameWon) return;
-
-            const count = countInPhrase(letter);
-            const cost = count * VOWEL_COST_PER_OCCURRENCE;
-
-            usedLetters.add(letter);
-            goldBalance -= cost;
-            updateGoldDisplay();
-
-            if (count > 0) {
-                revealedLetters.add(letter);
-                renderPhrase();
-                if (count === 1) {
-                    showToast("1 \"" + letter + "\" trouve. Cout : " + cost + " PO", "info");
-                } else {
-                    showToast(count + " \"" + letter + "\" trouves. Cout : " + cost + " PO", "info");
-                }
-                infoLineEl.textContent = "Voyelle \"" + letter + "\" revelee. Cout : " + cost + " PO.";
-                checkWin();
-            } else {
-                showToast("Pas de \"" + letter + "\". Cout : " + cost + " PO.", "error");
-                infoLineEl.textContent = "Pas de \"" + letter + "\". " + cost + " PO depenses.";
-            }
-
-            canChooseConsonant = false;
-            currentWheelValue = null;
-            updateKeyboard();
-        }
-
-        /* ============================================
-           VICTOIRE
-        ============================================ */
-        function checkWin() {
-            const allRevealed = [...currentPhrase].every(ch => {
-                if (ch === " " || ch === "'") return true;
-                if (!isAlpha(ch)) return true;
-                return revealedLetters.has(normalizeLetter(ch));
-            });
-
-            if (!allRevealed) return;
-
-            gameWon = true;
-            canChooseConsonant = false;
-
-            revealedLetters.clear();
-            for (const ch of currentPhrase) {
-                if (isAlpha(ch)) revealedLetters.add(normalizeLetter(ch));
-            }
-            renderPhrase();
-            updateKeyboard();
-
-            goldBalance += 500;
-            updateGoldDisplay();
-
-            startCelebration();
-
-            setTimeout(() => {
-                showModal(
-                    "Bravo !",
-                    '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
-                    '<p style="font-family:Cinzel,serif;font-size:1.15rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
-                    '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
-                    '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
-                    [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
-                );
-            }, 600);
-        }
-
-        /* ============================================
-           PROPOSITION
-        ============================================ */
-        function openGuessModal() {
-            if (isSpinning || gameWon) return;
-            showModal(
-                "Faire une proposition",
-                '<input type="text" class="modal-input" id="guessInput" placeholder="Tapez votre reponse..." autocomplete="off">',
-                [
-                    { text: "Valider", cls: "primary", action: submitGuess },
-                    { text: "Annuler", cls: "secondary", action: closeModal }
-                ]
-            );
-            setTimeout(() => {
-                const inp = document.getElementById("guessInput");
-                if (inp) inp.focus();
-            }, 120);
-        }
-
-        function submitGuess() {
-            const inp = document.getElementById("guessInput");
-            if (!inp) return;
-
-            const guess = inp.value
-                .trim()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .toUpperCase()
-                .replace(/\s+/g, " ");
-
-            const target = currentPhrase.toUpperCase().replace(/\s+/g, " ");
-            closeModal();
-
-            if (guess === target) {
-                gameWon = true;
-                canChooseConsonant = false;
-
-                revealedLetters.clear();
-                for (const ch of currentPhrase) {
-                    if (isAlpha(ch)) revealedLetters.add(normalizeLetter(ch));
-                }
-                renderPhrase();
-                updateKeyboard();
-
-                goldBalance += 500;
-                updateGoldDisplay();
-
-                startCelebration();
-
-                setTimeout(() => {
-                    showModal(
-                        "Bravo !",
-                        '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
-                        '<p style="font-family:Cinzel,serif;font-size:1.15rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
-                        '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
-                        '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
-                        [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
-                    );
-                }, 400);
-            } else {
-                showToast("Mauvaise reponse !", "error");
-                infoLineEl.textContent = "Mauvaise reponse. Continuez a jouer !";
-                canChooseConsonant = false;
-                currentWheelValue = null;
-                updateKeyboard();
-            }
-        }
-
-        /* ============================================
-           MODAL
-        ============================================ */
-        function showModal(title, contentHTML, buttons) {
-            modalTitleEl.textContent = title;
-            modalContentEl.innerHTML = contentHTML;
-            modalActionsEl.innerHTML = "";
-            buttons.forEach(b => {
-                const el = document.createElement("button");
-                el.className = "modal-btn " + (b.cls || "");
-                el.textContent = b.text;
-                el.addEventListener("click", b.action);
-                modalActionsEl.appendChild(el);
-            });
-            modalOverlayEl.classList.add("active");
-        }
-
-        function closeModal() {
-            modalOverlayEl.classList.remove("active");
-        }
-
-        /* ============================================
-           TOASTS
-        ============================================ */
-        function showToast(message, type) {
-            type = type || "info";
-            const t = document.createElement("div");
-            t.className = "toast " + type;
-            t.textContent = message;
-            toastContainerEl.appendChild(t);
-            setTimeout(() => { if (t.parentNode) t.remove(); }, 3200);
-        }
-
-        /* ============================================
-           OR
-        ============================================ */
-        function updateGoldDisplay() {
-            goldDisplayEl.textContent = goldBalance;
-            goldDisplayEl.className = "gold-amount" + (goldBalance < 0 ? " negative" : "");
-        }
-
-        /* ============================================
-           NOUVELLE PARTIE
-        ============================================ */
-        function startNewGame() {
-            closeModal();
-
-            if (celebrationInterval) {
-                clearInterval(celebrationInterval);
-                celebrationInterval = null;
-            }
-            document.body.classList.remove("celebrating");
-            restoreGarlandColors();
-
-            const idx = Math.floor(Math.random() * phrases.length);
-            currentPhrase = phrases[idx].text;
-            currentDisplayPhrase = phrasesDisplay[idx];
-            currentCategory = phrases[idx].cat;
-            revealedLetters = new Set();
-            usedLetters = new Set();
-            currentWheelValue = null;
-            canChooseConsonant = false;
-            gameWon = false;
-            isSpinning = false;
-
-            categoryDisplayEl.textContent = currentCategory;
-            wheelResultEl.textContent = "";
-            wheelResultEl.className = "wheel-result";
-            infoLineEl.textContent = "Faites tourner la roue pour commencer !";
-
-            renderPhrase();
-            buildKeyboard();
-            updateKeyboard();
-            drawWheel();
-        }
-
-        /* ============================================
-           ÉVÉNEMENTS
-        ============================================ */
-        spinBtnEl.addEventListener("click", spinWheel);
-        guessBtnEl.addEventListener("click", openGuessModal);
-        newGameBtnEl.addEventListener("click", startNewGame);
-
-        backBtnEl.addEventListener("click", () => {
-            showModal(
-                "Retour au Village",
-                '<p style="color:var(--muted);">Voulez-vous vraiment quitter la partie en cours ?</p>',
-                [
-                    { text: "Quitter", cls: "primary", action: () => { closeModal(); window.location.href = "#"; } },
-                    { text: "Rester", cls: "secondary", action: closeModal }
-                ]
-            );
-        });
-
-        document.addEventListener("keydown", e => {
-            if (!modalOverlayEl.classList.contains("active")) return;
-            if (e.key === "Enter") {
-                const inp = document.getElementById("guessInput");
-                if (inp && document.activeElement === inp) submitGuess();
-            }
-            if (e.key === "Escape") closeModal();
-        });
-
-        modalOverlayEl.addEventListener("click", e => {
-            if (e.target === modalOverlayEl) closeModal();
-        });
-
-        /* ============================================
-           INIT
-        ============================================ */
-        createGarlands();
-        startNewGame();
-    </script>
 </body>
 </html>
