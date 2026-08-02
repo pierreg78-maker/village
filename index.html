@@ -1,538 +1,1612 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#9fd27a">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Le Village</title>
-
-  <style>
-    :root {
-      --ciel: #dff4ff;
-      --herbe: #a8d985;
-      --herbe2: #8fc66d;
-      --creme: #fffaf0;
-      --texte: #3e342d;
-      --bleu: #2f6fa8;
-      --vert: #5f9857;
-      --or: #f4ca4f;
-      --ombre: 0 10px 24px rgba(67, 74, 45, .18);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--texte);
-      background:
-        linear-gradient(to bottom, var(--ciel) 0 31%, var(--herbe) 31% 100%);
-    }
-
-    a { color: inherit; }
-
-    .page {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 14px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .retour {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 999px;
-      background: var(--bleu);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 800;
-      box-shadow: 0 5px 12px rgba(30, 74, 117, .22);
-    }
-
-    .profil {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding: 8px;
-      border-radius: 18px;
-      background: rgba(255,250,240,.94);
-      box-shadow: var(--ombre);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 36px;
-      padding: 0 11px;
-      border-radius: 12px;
-      background: #fff;
-      font-weight: 800;
-    }
-
-    .badge.or {
-      background: #fff0b2;
-      color: #634700;
-    }
-
-    header {
-      padding: 26px 18px 22px;
-      text-align: center;
-      border-radius: 26px;
-      background: rgba(255,250,240,.94);
-      box-shadow: var(--ombre);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 6vw, 4rem);
-      color: #6f4d2e;
-    }
-
-    .intro {
-      max-width: 720px;
-      margin: 10px auto 0;
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
-      line-height: 1.5;
-    }
-
-    .alerte {
-      display: none;
-      max-width: 700px;
-      margin: 14px auto 0;
-      padding: 11px 14px;
-      border-radius: 14px;
-      background: #fff0c9;
-      color: #654700;
-      font-weight: 700;
-    }
-
-    .alerte.visible { display: block; }
-
-    .village {
-      position: relative;
-      margin-top: 20px;
-      padding: 26px 18px 34px;
-      overflow: hidden;
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 50% 52%, #e9dbbd 0 9%, transparent 9.5%),
-        radial-gradient(circle at 50% 52%, transparent 0 18%, rgba(222,203,165,.65) 18.5% 22%, transparent 22.5%),
-        linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,0)),
-        var(--herbe);
-      box-shadow: var(--ombre);
-    }
-
-    .decor {
-      position: absolute;
-      pointer-events: none;
-      user-select: none;
-      opacity: .95;
-    }
-
-    .nuage1 { top: 12px; left: 7%; font-size: 2.5rem; }
-    .nuage2 { top: 18px; right: 8%; font-size: 2.2rem; }
-    .arbre1 { top: 110px; left: 2%; font-size: 3rem; }
-    .arbre2 { top: 210px; right: 2%; font-size: 3rem; }
-    .fleurs1 { bottom: 24px; left: 4%; font-size: 2rem; }
-    .fleurs2 { bottom: 28px; right: 4%; font-size: 2rem; }
-
-    .place-centrale {
-      display: grid;
-      place-items: center;
-      width: 108px;
-      height: 108px;
-      margin: 0 auto 20px;
-      border: 8px solid #d7d8d1;
-      border-radius: 50%;
-      background: #94d9ef;
-      box-shadow: inset 0 0 0 5px #f3f3ef, 0 8px 18px rgba(74,75,60,.2);
-      font-size: 3rem;
-    }
-
-    .grille {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .lieu {
-      display: flex;
-      min-height: 238px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 14px;
-      border: 3px solid rgba(91,66,39,.18);
-      border-radius: 24px;
-      background: rgba(255,250,240,.94);
-      text-align: center;
-      box-shadow: var(--ombre);
-      transition: transform .16s ease, box-shadow .16s ease;
-    }
-
-    .lieu.actif:hover,
-    .lieu.actif:focus-within {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 28px rgba(67, 74, 45, .28);
-    }
-
-    .icone {
-      display: grid;
-      place-items: center;
-      width: 94px;
-      height: 94px;
-      margin-bottom: 8px;
-      border-radius: 50%;
-      background: #f1ead9;
-      font-size: 4.2rem;
-      line-height: 1;
-    }
-
-    .lieu h2 {
-      margin: 0 0 7px;
-      color: #694626;
-      font-size: 1.35rem;
-    }
-
-    .lieu p {
-      margin: 0 0 14px;
-      line-height: 1.4;
-    }
-
-    .action,
-    .construction {
-      display: inline-flex;
-      width: 100%;
-      max-width: 225px;
-      min-height: 44px;
-      align-items: center;
-      justify-content: center;
-      padding: 0 15px;
-      border-radius: 999px;
-      font-weight: 900;
-    }
-
-    .action {
-      background: var(--vert);
-      color: white;
-      text-decoration: none;
-      box-shadow: 0 5px 10px rgba(54,104,49,.2);
-    }
-
-    .construction {
-      background: #e7dfd1;
-      color: #6d6254;
-    }
-
-    .inactif {
-      opacity: .78;
-    }
-
-    footer {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(255,250,240,.92);
-      text-align: center;
-      box-shadow: var(--ombre);
-    }
-
-    footer p {
-      margin: 5px 0 0;
-      color: #6d6254;
-      font-size: .92rem;
-    }
-
-    @media (max-width: 860px) {
-      .grille { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 560px) {
-      .page { padding: 9px; }
-
-      .retour,
-      .profil {
-        width: 100%;
-        justify-content: center;
-      }
-
-      header { padding: 22px 13px; }
-
-      .village { padding: 22px 9px 28px; }
-
-      .grille {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .lieu {
-        min-height: 218px;
-      }
-
-      .decor { display: none; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; }
-    }
-  </style>
-</head>
-
-<body>
-  <main class="page">
-    <div class="topbar">
-      <a class="retour" href="https://pierreg78-maker.github.io/Atelier/">
-        Retour à l’Atelier
-      </a>
-
-      <div class="profil" aria-label="Profil du joueur">
-        <span class="badge">👤 <span id="profilNom">Aucun profil</span></span>
-        <span class="badge or">🪙 <span id="profilSolde">0 pièce d’or</span></span>
-      </div>
-    </div>
-
-    <header>
-      <h1>🏡 Le Village du hasard</h1>
-      <p class="intro">
-        Vous pouvez maintenant gagner des pièces d’or virtuelles si la chance vous sourit.
-        Pour empocher les gains, il est nécessaire d'avoir un "profil" (un compte gratuit) que l'on active dans la Vitrine. 
-      </p>
-
-      <div class="alerte" id="profilAlerte">
-        Aucun profil actif n’a été trouvé. Vous pouvez tout de même visiter le village.
-      </div>
-    </header>
-
-    <section class="village" aria-label="Carte du Village du hasard">
-      <span class="decor nuage1">☁️</span>
-      <span class="decor nuage2">☁️</span>
-      <span class="decor arbre1">🌳</span>
-      <span class="decor arbre2">🌲</span>
-      <span class="decor fleurs1">🌸🌼</span>
-      <span class="decor fleurs2">🌷🌻</span>
-
-      <div class="place-centrale" aria-hidden="true">⛲</div>
-
-      <div class="grille">
-        
-         <article class="lieu actif">
-          <div class="icone" aria-hidden="true">🎁</div>
-          <div>
-            <h2>La Vitrine enchantée</h2>
-            <p>Par ici pour s'inscrire et commencer véritablement l'aventure...</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/vitrine-enchantee/">
-            Entrer dans la vitrine
-          </a>
-        </article>
-        
-        <article class="lieu actif">
-          <div class="icone" aria-hidden="true">&#128176;</div>
-          <div>
-            <h2>Le Loto-Bingo</h2>
-            <p>Tirez 3 boules, complétez la grille et gagnez des pièces d’or.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/loto/">
-            Essayer le loto
-          </a>
-        </article>
-
-        <article class="lieu actif">
-          <div class="icone" aria-hidden="true">🃏</div>
-          <div>
-            <h2>La table de Blackjack</h2>
-            <p>Faites moins de 21 points et mieux que le croupier pour gagner vite et gros. Mise min. de 10 pièces d'or.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/blackjack/">
-            Jouer au Blackjack
-          </a>
-        </article>
-
-
-        <article class="lieu actif">
-          <div class="icone" aria-hidden="true">Ⓐ</div>
-          <div>
-            <h2>Les Mots-Mêlés</h2>
-            <p>Ouvrez le grimoire et retrouvez tous les mots cachés dans la grille.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/mots-meles/">
-            Chercher les mots
-          </a>
-        </article>
-
-       <article class="lieu actif">
-          <div class="icone" aria-hidden="true">🏺</div>
-          <div>
-            <h2>Le Trésor des Âges</h2>
-            <p>Jeu de grattage, coût: 1 pièce d'or. Découvrez dans ces fouilles de l'or et des objets à collectionner.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/tresor_des_ages/">
-            Allons gratter
-          </a>
-        </article>
-
-        <article class="lieu actif">
-          <div class="icone" aria-hidden="true">🎲</div>
-          <div>
-            <h2>La Taverne du 421</h2>
-            <p>Jouez au célèbre jeu de dés contre un ami ou contre l'ordinateur. Pas de mise obligatoire.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/421/">
-            3,2,1...421 !
-          </a>
-        </article>
-
- <article class="lieu inactif">
-          <div class="icone" aria-hidden="true">&#128119;</div>
-          <div>
-            <h2>La Roue de la fortune</h2>
-            <p>Presque comme à la TV. Version.</p>
-          </div>
-          <a class="action" href="https://pierreg78-maker.github.io/la_roue_de_la_fortune/">
-            La roue tourne
-          </a>
-        </article>
-        
-      </div>
-    </section>
-
-    <footer>
-      <strong>Atelier Mémoire — Le Village du hasard</strong>
-      <p> <a href="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/refs/heads/main/assets/sons/credits.md">Crédits bruitages des jeux</a></p>
-    </footer>
-  </main>
-
-  <audio id="ambiance-celtique" loop preload="auto">
-  <source
-    src="https://raw.githubusercontent.com/pierreg78-maker/AtelierMemo-Assets/main/assets/sons/ambiance/celtic_loop.mp3"
-    type="audio/mp3"
-  >
-</audio>
-  
-  <script>
-    const API_URL =
-      'https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec';
-
-    const CLE_PROFIL = 'vitrineProfilActif';
-    const CLE_MODE_ANONYME = 'lotoModeAnonyme';
-
-    const nomEl = document.getElementById('profilNom');
-    const soldeEl = document.getElementById('profilSolde');
-    const alerteEl = document.getElementById('profilAlerte');
-
-    function entier(valeur) {
-      const n = Number(valeur);
-      return Number.isFinite(n) ? Math.trunc(n) : 0;
-    }
-
-    function lireProfilLocal() {
-      try {
-        const profil = JSON.parse(localStorage.getItem(CLE_PROFIL) || 'null');
-        return profil && profil.id ? profil : null;
-      } catch {
-        localStorage.removeItem(CLE_PROFIL);
-        return null;
-      }
-    }
-
-    function afficherProfil(profil) {
-      const modeAnonyme = localStorage.getItem(CLE_MODE_ANONYME) === '1';
-
-      if (modeAnonyme) {
-        nomEl.textContent = 'Joueur anonyme';
-        soldeEl.textContent = '—';
-        alerteEl.classList.remove('visible');
-        return;
-      }
-
-      if (!profil) {
-        nomEl.textContent = 'Aucun profil';
-        soldeEl.textContent = '0 pièce d’or';
-        alerteEl.classList.add('visible');
-        return;
-      }
-
-      const pieces = entier(profil.piecesOr ?? profil.solde);
-
-      nomEl.textContent = profil.prenom || 'Joueur';
-      soldeEl.textContent =
-        pieces + (pieces === 1 ? ' pièce d’or' : ' pièces d’or');
-
-      alerteEl.classList.remove('visible');
-    }
-
-    async function chargerProfil() {
-      const profilLocal = lireProfilLocal();
-      afficherProfil(profilLocal);
-
-      if (!profilLocal || localStorage.getItem(CLE_MODE_ANONYME) === '1') {
-        return;
-      }
-
-      try {
-        const url = new URL(API_URL);
-        url.searchParams.set('action', 'obtenirProfil');
-        url.searchParams.set('id', profilLocal.id);
-        url.searchParams.set('_', Date.now());
-
-        const reponse = await fetch(url, {
-          method: 'GET',
-          cache: 'no-store'
-        });
-
-        if (!reponse.ok) throw new Error('Erreur serveur');
-
-        const resultat = await reponse.json();
-
-        if (!resultat.ok || !resultat.profil) {
-          throw new Error(resultat.erreur || 'Profil introuvable');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Roue de la Fortune</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --bg-secondary: #1a1510;
+            --fg: #fdf6e3;
+            --muted: #8a7e6b;
+            --accent: #d4a017;
+            --accent-glow: #f5c842;
+            --card: rgba(30, 25, 18, 0.92);
+            --border: rgba(212, 160, 23, 0.3);
+            --danger: #c0392b;
+            --success: #27ae60;
+            --pink: #e84393;
+            --pink-light: #fd79a8;
         }
 
-        const profil = {
-          id: resultat.profil.id,
-          prenom: resultat.profil.prenom,
-          piecesOr: entier(resultat.profil.piecesOr ?? resultat.profil.solde)
-        };
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        localStorage.setItem(CLE_PROFIL, JSON.stringify(profil));
-        afficherProfil(profil);
-      } catch (erreur) {
-        console.warn('Actualisation du profil impossible :', erreur.message);
-      }
-    }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    chargerProfil();
-    const ambianceCeltique = document.getElementById("ambiance-celtique");
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(212, 160, 23, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(192, 57, 43, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 85%, rgba(39, 174, 96, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-ambianceCeltique.volume = 0.10;
+        /* ============ GUIRLANDES — 4 CÔTÉS ============ */
+        .garland {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+        }
 
-function demarrerAmbianceCeltique() {
-  ambianceCeltique.play().catch(() => {
-    console.log("Le navigateur attend une interaction avant de lancer le son.");
-  });
+        /* Fils horizontaux */
+        .garland-top::after,
+        .garland-bottom::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(120, 100, 60, 0.5);
+            transition: all 0.3s;
+        }
+        .garland-top::after { top: 9px; }
+        .garland-bottom::after { bottom: 9px; }
 
-  document.removeEventListener("click", demarrerAmbianceCeltique);
-  document.removeEventListener("touchstart", demarrerAmbianceCeltique);
-}
+        /* Fils verticaux */
+        .garland-left::after,
+        .garland-right::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(120, 100, 60, 0.5);
+            transition: all 0.3s;
+        }
+        .garland-left::after { left: 9px; }
+        .garland-right::after { right: 9px; }
 
-document.addEventListener("click", demarrerAmbianceCeltique);
-document.addEventListener("touchstart", demarrerAmbianceCeltique);
-  </script>
+        /* Guirlandes haut et bas */
+        .garland-top,
+        .garland-bottom {
+            left: 0; right: 0;
+            height: 32px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-evenly;
+            padding: 0 8px;
+        }
+        .garland-top { top: 0; }
+        .garland-bottom { bottom: 0; }
+        .garland-top .garland-bulb { margin-top: 10px; }
+        .garland-bottom .garland-bulb { margin-bottom: 10px; margin-top: auto; }
+
+        /* Guirlandes gauche et droite */
+        .garland-left,
+        .garland-right {
+            top: 0; bottom: 0;
+            width: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-evenly;
+            padding: 8px 0;
+        }
+        .garland-left { left: 0; }
+        .garland-right { right: 0; }
+        .garland-left .garland-bulb,
+        .garland-right .garland-bulb { margin-left: 12px; }
+
+        /* Ampoule */
+        .garland-bulb {
+            width: 7px;
+            height: 10px;
+            border-radius: 45% 45% 50% 50% / 55% 55% 45% 45%;
+            flex-shrink: 0;
+            position: relative;
+            transition: transform 0.2s, filter 0.2s;
+            animation: bulbGlow 2s ease-in-out infinite;
+        }
+
+        /* Connecteurs haut/bas */
+        .garland-top .garland-bulb::before,
+        .garland-bottom .garland-bulb::before {
+            content: '';
+            position: absolute;
+            width: 1px; height: 5px;
+            left: 50%; transform: translateX(-50%);
+            background: rgba(120, 100, 60, 0.5);
+        }
+        .garland-top .garland-bulb::before { top: -5px; }
+        .garland-bottom .garland-bulb::before { bottom: -5px; top: auto; }
+
+        /* Connecteurs gauche/droite */
+        .garland-left .garland-bulb::before,
+        .garland-right .garland-bulb::before {
+            content: '';
+            position: absolute;
+            width: 5px; height: 1px;
+            top: 50%; transform: translateY(-50%);
+            background: rgba(120, 100, 60, 0.5);
+        }
+        .garland-left .garland-bulb::before { left: -5px; }
+        .garland-right .garland-bulb::before { left: -5px; }
+
+        @keyframes bulbGlow {
+            0%, 100% { opacity: 1; filter: brightness(1.15); }
+            50% { opacity: 0.25; filter: brightness(0.5); }
+        }
+
+        /* ============ MODE CÉLÉBRATION DES GUIRLANDES ============ */
+        body.celebrating .garland-bulb {
+            animation: bulbCelebration 0.2s ease-in-out infinite !important;
+            transform: scale(1.6);
+        }
+
+        @keyframes bulbCelebration {
+            0%, 100% {
+                opacity: 1;
+                filter: brightness(3) saturate(2);
+                transform: scale(1.6);
+            }
+            50% {
+                opacity: 0.2;
+                filter: brightness(0.6);
+                transform: scale(0.8);
+            }
+        }
+
+        /* Fils qui s'illuminent en arc-en-ciel */
+        body.celebrating .garland-top::after,
+        body.celebrating .garland-bottom::after {
+            height: 3px;
+            background: linear-gradient(90deg, #ff0044, #ffdd00, #00ff88, #00ccff, #ff00cc, #ff0044);
+            background-size: 300% 100%;
+            animation: wireGlowH 0.6s linear infinite;
+            box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
+        }
+
+        body.celebrating .garland-left::after,
+        body.celebrating .garland-right::after {
+            width: 3px;
+            background: linear-gradient(180deg, #ff0044, #ffdd00, #00ff88, #00ccff, #ff00cc, #ff0044);
+            background-size: 100% 300%;
+            animation: wireGlowV 0.6s linear infinite;
+            box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
+        }
+
+        @keyframes wireGlowH {
+            from { background-position: 0% 0%; }
+            to { background-position: 300% 0%; }
+        }
+        @keyframes wireGlowV {
+            from { background-position: 0% 0%; }
+            to { background-position: 0% 300%; }
+        }
+
+        /* ============ CONTENEUR PRINCIPAL ============ */
+        .game-container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ============ HEADER ============ */
+        .game-header {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .game-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: var(--accent);
+            text-shadow: 0 0 30px rgba(212, 160, 23, 0.25);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .gold-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 7px 20px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+
+        .gold-display i { color: var(--accent); font-size: 1.15rem; }
+
+        .gold-amount {
+            color: var(--accent-glow);
+            min-width: 50px;
+            text-align: right;
+            transition: color 0.3s;
+        }
+        .gold-amount.negative { color: var(--danger); }
+
+        /* ============ CATÉGORIE ============ */
+        .category-display {
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* ============ PHRASE — CASES À BORDURE FINE ============ */
+        .phrase-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 26px;
+            min-height: 54px;
+            padding: 18px 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .letter-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 42px;
+            border: 1px solid rgba(253, 246, 227, 0.3);
+            border-radius: 3px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--fg);
+            background: rgba(253, 246, 227, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        /* Apostrophe toujours visible, style neutre */
+        .letter-box.apostrophe {
+            border-color: rgba(253, 246, 227, 0.12);
+            background: transparent;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .letter-box.revealed {
+            background: rgba(212, 160, 23, 0.13);
+            border-color: rgba(212, 160, 23, 0.45);
+            color: var(--accent-glow);
+            animation: revealPop 0.4s ease-out;
+        }
+
+        .letter-box.won {
+            background: rgba(39, 174, 96, 0.18);
+            border-color: rgba(39, 174, 96, 0.5);
+            color: #5dde9e;
+            animation: none;
+        }
+
+        @keyframes revealPop {
+            0% { transform: scale(1.25); background: rgba(212, 160, 23, 0.35); }
+            100% { transform: scale(1); }
+        }
+
+        .space-gap {
+            display: inline-block;
+            width: 18px;
+        }
+
+        /* ============ SECTION ROUE ============ */
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 270px;
+            height: 270px;
+            margin-bottom: 14px;
+        }
+
+        @media (min-width: 560px) {
+            .wheel-wrapper { width: 340px; height: 340px; }
+        }
+
+        #wheelCanvas {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 18px rgba(212, 160, 23, 0.18));
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-top: 26px solid var(--accent);
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            z-index: 5;
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #d4a017, #b8860b);
+            color: #1a1510;
+            border: none;
+            padding: 11px 34px;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 160, 23, 0.35);
+        }
+        .spin-btn:active:not(:disabled) { transform: translateY(0); }
+        .spin-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* Bouton "Faire une proposition" sous la roue */
+        .guess-btn-wheel {
+            margin-top: 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 8px 26px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .guess-btn-wheel:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: rgba(212, 160, 23, 0.1);
+            transform: translateY(-1px);
+        }
+        .guess-btn-wheel:disabled { opacity: 0.25; cursor: not-allowed; }
+        .guess-btn-wheel i { margin-right: 5px; }
+
+        .wheel-result {
+            margin-top: 10px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            min-height: 26px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .wheel-result.positive { color: var(--accent-glow); }
+        .wheel-result.negative { color: var(--danger); }
+
+        /* ============ CLAVIER ============ */
+        .keyboard-section { margin-bottom: 14px; }
+
+        .keyboard-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 7px;
+            text-align: center;
+        }
+
+        .vowel-cost-note {
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 6px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .keyboard-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .key-btn {
+            width: 37px;
+            height: 40px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--fg);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-btn:hover:not(:disabled) {
+            background: rgba(212, 160, 23, 0.18);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .key-btn:disabled {
+            opacity: 0.18;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .key-btn.vowel { border-color: rgba(192, 57, 43, 0.35); }
+
+        .key-btn.vowel:hover:not(:disabled) {
+            background: rgba(192, 57, 43, 0.18);
+            border-color: #c0392b;
+        }
+
+        .key-btn.used-correct {
+            opacity: 1 !important;
+            background: rgba(39, 174, 96, 0.2) !important;
+            border-color: rgba(39, 174, 96, 0.5) !important;
+            color: #5dde9e !important;
+            cursor: default;
+        }
+
+        .key-btn.used-wrong {
+            opacity: 1 !important;
+            background: rgba(192, 57, 43, 0.12) !important;
+            border-color: rgba(192, 57, 43, 0.25) !important;
+            color: #a05050 !important;
+            cursor: default;
+        }
+
+        /* ============ ACTIONS ============ */
+        .actions-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 9px 22px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: rgba(212, 160, 23, 0.1);
+        }
+        .action-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+        .action-btn i { margin-right: 5px; }
+
+        /* ============ LIGNE DU BAS ============ */
+        .info-line {
+            text-align: center;
+            font-size: 0.84rem;
+            color: var(--muted);
+            margin-bottom: 12px;
+            min-height: 20px;
+            line-height: 1.4;
+        }
+
+        /* ============ BOUTON RETOUR AU VILLAGE — ROSE ============ */
+        .back-btn {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+            padding: 11px;
+            background: transparent;
+            border: 1px solid var(--pink);
+            color: var(--pink-light);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .back-btn:hover {
+            background: rgba(232, 67, 147, 0.12);
+            border-color: var(--pink-light);
+            color: #fff;
+            box-shadow: 0 0 16px rgba(232, 67, 147, 0.25);
+        }
+        .back-btn i { margin-right: 6px; }
+
+        /* ============ TOASTS ============ */
+        .toast-container {
+            position: fixed;
+            top: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .toast {
+            background: rgba(20, 18, 14, 0.95);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.86rem;
+            text-align: center;
+            animation: toastIn 0.35s ease-out, toastOut 0.4s ease-in forwards;
+            animation-delay: 0s, 2.6s;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+            line-height: 1.35;
+        }
+
+        .toast.success { border-color: var(--success); color: #5dde9e; }
+        .toast.error { border-color: var(--danger); color: #e07070; }
+        .toast.info { border-color: var(--accent); color: var(--accent-glow); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.72);
+            z-index: 1500;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.35rem;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--fg);
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        .modal-input:focus { border-color: var(--accent); }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 9px 22px;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #d4a017, #b8860b);
+            color: #1a1510;
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .modal-btn:hover { transform: translateY(-1px); }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 480px) {
+            .letter-box {
+                width: 24px;
+                height: 32px;
+                font-size: 0.82rem;
+            }
+            .space-gap { width: 10px; }
+            .key-btn {
+                width: 30px;
+                height: 34px;
+                font-size: 0.78rem;
+            }
+            .game-container { padding: 40px 8px 70px; }
+            .phrase-container { padding: 12px 8px; gap: 3px; }
+            .spin-btn { padding: 10px 24px; font-size: 0.9rem; }
+            .guess-btn-wheel { padding: 7px 18px; font-size: 0.82rem; }
+        }
+
+        /* ============ RÉDUCTION DE MOUVEMENT ============ */
+        @media (prefers-reduced-motion: reduce) {
+            .garland-bulb { animation: none !important; opacity: 0.7; }
+            .letter-box.revealed { animation: none !important; }
+            .toast { animation: none !important; opacity: 1; }
+            .modal-box { animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toasts -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <div class="modal-title" id="modalTitle"></div>
+            <div id="modalContent"></div>
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <main class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">La Roue de la Fortune</h1>
+            <div class="gold-display" aria-live="polite">
+                <i class="fas fa-coins" aria-hidden="true"></i>
+                <span>Pièces d'or :</span>
+                <span class="gold-amount" id="goldDisplay">0</span>
+            </div>
+        </header>
+
+        <div class="category-display" id="categoryDisplay" aria-live="polite">Chargement...</div>
+
+        <div class="phrase-container" id="phraseContainer" aria-label="Expression à deviner"></div>
+
+        <section class="wheel-section" aria-label="Roue de la fortune">
+            <div class="wheel-wrapper">
+                <div class="wheel-pointer" aria-hidden="true"></div>
+                <canvas id="wheelCanvas" width="680" height="680"></canvas>
+            </div>
+            <button class="spin-btn" id="spinBtn" aria-label="Faire tourner la roue">
+                <i class="fas fa-sync-alt" aria-hidden="true"></i> Faire tourner la roue
+            </button>
+            <button class="guess-btn-wheel" id="guessBtnWheel" disabled aria-label="Faire une proposition">
+                <i class="fas fa-lightbulb" aria-hidden="true"></i> Faire une proposition
+            </button>
+            <div class="wheel-result" id="wheelResult" aria-live="polite"></div>
+        </section>
+
+        <section class="keyboard-section" aria-label="Clavier des consonnes">
+            <div class="keyboard-label">Consonnes</div>
+            <div class="keyboard-grid" id="consonantGrid"></div>
+        </section>
+
+        <section class="keyboard-section" aria-label="Clavier des voyelles">
+            <div class="keyboard-label">Voyelles <span style="color:var(--danger);font-weight:800;">(5 PO / occurrence)</span></div>
+            <div class="vowel-cost-note">Le coût est de 5 pièces d'or par occurrence de la voyelle dans l'expression. Le solde peut devenir négatif.</div>
+            <div class="keyboard-grid" id="vowelGrid"></div>
+        </section>
+
+        <section class="actions-section">
+            <button class="action-btn" id="newGameBtn" aria-label="Nouvelle partie">
+                <i class="fas fa-redo" aria-hidden="true"></i> Nouvelle partie
+            </button>
+        </section>
+
+        <!-- Ligne d'info AU-DESSUS du bouton retour -->
+        <div class="info-line" id="infoLine" aria-live="polite">Faites tourner la roue pour commencer !</div>
+
+        <!-- Bouton Retour au Village en rose -->
+        <button class="back-btn" id="backBtn" aria-label="Retour au village">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> Retour au Village
+        </button>
+    </main>
+
+    <script>
+        /* ============================================
+           EXPRESSIONS FRANÇAISES
+           (œ remplacé par oe pour la logique de jeu)
+        ============================================ */
+        const phrases = [
+            { text: "Avoir le cafard", cat: "Expression courante" },
+            { text: "Se creuser la cervelle", cat: "Expression courante" },
+            { text: "Avoir un chat dans la gorge", cat: "Expression courante" },
+            { text: "Couter les yeux de la tete", cat: "Expression courante" },
+            { text: "Avoir le vent en poupe", cat: "Expression courante" },
+            { text: "Mettre les pieds dans le plat", cat: "Expression courante" },
+            { text: "Perdre la boule", cat: "Expression courante" },
+            { text: "Avoir le coeur sur la main", cat: "Expression courante" },
+            { text: "Tourner autour du pot", cat: "Expression courante" },
+            { text: "Avoir la frite", cat: "Expression courante" },
+            { text: "Poser un lapin", cat: "Expression courante" },
+            { text: "Avoir d'autres chats a fouetter", cat: "Expression courante" },
+            { text: "Revenir a ses moutons", cat: "Expression courante" },
+            { text: "Avaler des couleuvres", cat: "Expression courante" },
+            { text: "Faire l'autruche", cat: "Expression courante" },
+            { text: "Avoir une faim de loup", cat: "Expression courante" },
+            { text: "Etre un cordon-bleu", cat: "Expression courante" },
+            { text: "Chanter comme une casserole", cat: "Expression courante" },
+            { text: "Poule mouillee", cat: "Expression courante" },
+            { text: "Quand les poules auront des dents", cat: "Expression courante" },
+            { text: "Voir la vie en rose", cat: "Expression courante" },
+            { text: "Etre blanc comme neige", cat: "Expression courante" },
+            { text: "Raconter des salades", cat: "Expression courante" },
+            { text: "Pedaler dans la choucroute", cat: "Expression courante" },
+            { text: "C'est la fin des haricots", cat: "Expression courante" },
+            { text: "Haut comme trois pommes", cat: "Expression courante" },
+            { text: "Etre dans de beaux draps", cat: "Expression courante" },
+            { text: "Vendre la meche", cat: "Expression courante" },
+            { text: "Mettre de l'eau dans son vin", cat: "Expression courante" },
+            { text: "Appeler un chat un chat", cat: "Expression courante" },
+            { text: "Battre le fer tant qu'il est chaud", cat: "Expression courante" },
+            { text: "Avoir le pain sur la planche", cat: "Expression courante" },
+            { text: "Prendre le taureau par les cornes", cat: "Expression courante" },
+            { text: "Jeter l'eponge", cat: "Expression courante" },
+            { text: "Ne pas etre ne de la derniere pluie", cat: "Expression courante" },
+            { text: "Faire d'une pierre deux coups", cat: "Expression courante" },
+            { text: "Mettre la main a la pate", cat: "Expression courante" },
+            { text: "Broyer du noir", cat: "Expression courante" },
+            { text: "Passer l'eponge", cat: "Expression courante" },
+            { text: "Tirer les vers du nez", cat: "Expression courante" },
+            { text: "C'est la mer a boire", cat: "Expression courante" },
+            { text: "Se mettre le doigt dans l'oeil", cat: "Expression courante" },
+            { text: "Avoir le dos large", cat: "Expression courante" },
+            { text: "Tomber des nues", cat: "Expression courante" },
+            { text: "Vivre d'amour et d'eau fraiche", cat: "Expression courante" },
+            { text: "Avoir un poil dans la main", cat: "Expression courante" },
+            { text: "Chercher midi a quatorze heures", cat: "Expression courante" },
+            { text: "Courir plusieurs lievres a la fois", cat: "Expression courante" },
+            { text: "Crier sur tous les toits", cat: "Expression courante" },
+            { text: "Etre loge a la meme enseigne", cat: "Expression courante" }
+        ];
+
+        /* Version affichée avec accents (pour le rendu final et la modal) */
+        const phrasesDisplay = [
+            "Avoir le cafard",
+            "Se creuser la cervelle",
+            "Avoir un chat dans la gorge",
+            "Coûter les yeux de la tête",
+            "Avoir le vent en poupe",
+            "Mettre les pieds dans le plat",
+            "Perdre la boule",
+            "Avoir le cœur sur la main",
+            "Tourner autour du pot",
+            "Avoir la frite",
+            "Poser un lapin",
+            "Avoir d'autres chats à fouetter",
+            "Revenir à ses moutons",
+            "Avaler des couleuvres",
+            "Faire l'autruche",
+            "Avoir une faim de loup",
+            "Être un cordon-bleu",
+            "Chanter comme une casserole",
+            "Poule mouillée",
+            "Quand les poules auront des dents",
+            "Voir la vie en rose",
+            "Être blanc comme neige",
+            "Raconter des salades",
+            "Pédaler dans la choucroute",
+            "C'est la fin des haricots",
+            "Haut comme trois pommes",
+            "Être dans de beaux draps",
+            "Vendre la mèche",
+            "Mettre de l'eau dans son vin",
+            "Appeler un chat un chat",
+            "Battre le fer tant qu'il est chaud",
+            "Avoir le pain sur la planche",
+            "Prendre le taureau par les cornes",
+            "Jeter l'éponge",
+            "Ne pas être né de la dernière pluie",
+            "Faire d'une pierre deux coups",
+            "Mettre la main à la pâte",
+            "Broyer du noir",
+            "Passer l'éponge",
+            "Tirer les vers du nez",
+            "C'est la mer à boire",
+            "Se mettre le doigt dans l'œil",
+            "Avoir le dos large",
+            "Tomber des nues",
+            "Vivre d'amour et d'eau fraîche",
+            "Avoir un poil dans la main",
+            "Chercher midi à quatorze heures",
+            "Courir plusieurs lièvres à la fois",
+            "Crier sur tous les toits",
+            "Être logé à la même enseigne"
+        ];
+
+        /* Segments de la roue */
+        const wheelSegments = [
+            { value: 100,  color: "#c0392b", label: "100" },
+            { value: 200,  color: "#e67e22", label: "200" },
+            { value: 300,  color: "#f1c40f", label: "300" },
+            { value: 400,  color: "#27ae60", label: "400" },
+            { value: 500,  color: "#1abc9c", label: "500" },
+            { value: 600,  color: "#d35400", label: "600" },
+            { value: 700,  color: "#16a085", label: "700" },
+            { value: 800,  color: "#e74c3c", label: "800" },
+            { value: 900,  color: "#f39c12", label: "900" },
+            { value: 1000, color: "#2ecc71", label: "1000" },
+            { value: 1500, color: "#e67e22", label: "1500" },
+            { value: 2000, color: "#c0392b", label: "2000" },
+            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" },
+            { value: 10,   color: "#4a5568", label: "10" }
+        ];
+
+        const VOWELS = ["A", "E", "I", "O", "U", "Y"];
+        const VOWEL_COST_PER_OCCURRENCE = 5;
+
+        /* ============================================
+           ÉTAT DU JEU
+        ============================================ */
+        let currentPhrase = "";
+        let currentDisplayPhrase = "";
+        let currentCategory = "";
+        let revealedLetters = new Set();
+        let usedLetters = new Set();
+        let goldBalance = 0;
+        let currentWheelValue = null;
+        let isSpinning = false;
+        let canChooseConsonant = false;
+        let gameWon = false;
+        let wheelAngle = 0;
+        let spinVelocity = 0;
+        let celebrationInterval = null;
+
+        /* Couleurs originales des guirlandes (pour restauration) */
+        let garlandOriginalColors = [];
+
+        /* ============================================
+           RÉFÉRENCES DOM
+        ============================================ */
+        const goldDisplayEl     = document.getElementById("goldDisplay");
+        const categoryDisplayEl = document.getElementById("categoryDisplay");
+        const phraseContainerEl = document.getElementById("phraseContainer");
+        const spinBtnEl         = document.getElementById("spinBtn");
+        const guessBtnWheelEl   = document.getElementById("guessBtnWheel");
+        const wheelResultEl     = document.getElementById("wheelResult");
+        const consonantGridEl   = document.getElementById("consonantGrid");
+        const vowelGridEl       = document.getElementById("vowelGrid");
+        const newGameBtnEl      = document.getElementById("newGameBtn");
+        const infoLineEl        = document.getElementById("infoLine");
+        const backBtnEl         = document.getElementById("backBtn");
+        const canvasEl          = document.getElementById("wheelCanvas");
+        const ctx               = canvasEl.getContext("2d");
+        const toastContainerEl  = document.getElementById("toastContainer");
+        const modalOverlayEl    = document.getElementById("modalOverlay");
+        const modalTitleEl      = document.getElementById("modalTitle");
+        const modalContentEl    = document.getElementById("modalContent");
+        const modalActionsEl    = document.getElementById("modalActions");
+
+        /* ============================================
+           NORMALISATION DES LETTRES (accents → non accentuées)
+        ============================================ */
+        function normalizeLetter(ch) {
+            return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+        }
+
+        /* Vérifie si un caractère est une lettre (A-Z après normalisation) */
+        function isAlpha(ch) {
+            const n = normalizeLetter(ch);
+            return n >= "A" && n <= "Z";
+        }
+
+        /* Compter les occurrences d'une lettre dans la phrase (après normalisation) */
+        function countInPhrase(letter) {
+            let n = 0;
+            for (const ch of currentPhrase) {
+                if (normalizeLetter(ch) === letter) n++;
+            }
+            return n;
+        }
+
+        /* ============================================
+           GUIRLANDES — 4 CÔTÉS
+        ============================================ */
+        function createGarlands() {
+            const bulbColors = [
+                "#ff4444", "#ffdd44", "#44ff88", "#ff8844",
+                "#44ddff", "#ff66aa", "#aaff44", "#ffaa22"
+            ];
+            const sides = ["top", "bottom", "left", "right"];
+
+            sides.forEach(side => {
+                const container = document.createElement("div");
+                container.className = "garland garland-" + side;
+                container.setAttribute("aria-hidden", "true");
+
+                let count;
+                if (side === "top" || side === "bottom") {
+                    count = Math.max(8, Math.floor(window.innerWidth / 30));
+                } else {
+                    count = Math.max(6, Math.floor(window.innerHeight / 30));
+                }
+
+                for (let i = 0; i < count; i++) {
+                    const bulb = document.createElement("div");
+                    bulb.className = "garland-bulb";
+                    const col = bulbColors[i % bulbColors.length];
+                    bulb.style.backgroundColor = col;
+                    bulb.style.boxShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
+                    bulb.style.animationDelay = (i * 0.18 % 2).toFixed(2) + "s";
+                    bulb.style.animationDuration = (1.8 + (i % 3) * 0.4).toFixed(1) + "s";
+                    /* Stocker la couleur originale */
+                    bulb.dataset.origColor = col;
+                    bulb.dataset.origShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
+                    container.appendChild(bulb);
+                }
+
+                document.body.appendChild(container);
+            });
+        }
+
+        /* Restaure les couleurs originales des guirlandes */
+        function restoreGarlandColors() {
+            document.querySelectorAll(".garland-bulb").forEach(bulb => {
+                bulb.style.backgroundColor = bulb.dataset.origColor;
+                bulb.style.boxShadow = bulb.dataset.origShadow;
+            });
+        }
+
+        /* ============================================
+           CÉLÉBRATION DES GUIRLANDES
+        ============================================ */
+        function startCelebration() {
+            document.body.classList.add("celebrating");
+
+            const celebrationColors = [
+                "#ff0044", "#ffdd00", "#00ff88", "#ff6600",
+                "#00ccff", "#ff00cc", "#aaff00", "#ffaa00", "#ffffff"
+            ];
+            const bulbs = document.querySelectorAll(".garland-bulb");
+            let tick = 0;
+
+            celebrationInterval = setInterval(() => {
+                tick++;
+                bulbs.forEach((bulb, i) => {
+                    const col = celebrationColors[(i + tick) % celebrationColors.length];
+                    bulb.style.backgroundColor = col;
+                    bulb.style.boxShadow = "0 0 12px 5px " + col + ", 0 0 30px 10px " + col + "88";
+                });
+            }, 100);
+
+            /* Arrêter après 5 secondes */
+            setTimeout(() => {
+                clearInterval(celebrationInterval);
+                celebrationInterval = null;
+                document.body.classList.remove("celebrating");
+                restoreGarlandColors();
+            }, 5000);
+        }
+
+        /* ============================================
+           ROUE — DESSIN
+        ============================================ */
+        const segCount = wheelSegments.length;
+        const segAngle = (2 * Math.PI) / segCount;
+
+        function drawWheel() {
+            const w = canvasEl.width;
+            const h = canvasEl.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.max(10, Math.min(cx, cy) - 22);
+
+            ctx.clearRect(0, 0, w, h);
+
+            /* Anneaux extérieurs décoratifs */
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius + 14, 0, 2 * Math.PI);
+            ctx.strokeStyle = "#d4a017";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius + 8, 0, 2 * Math.PI);
+            ctx.strokeStyle = "#8b6914";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            /* Segments */
+            for (let i = 0; i < segCount; i++) {
+                const start = wheelAngle + i * segAngle;
+                const end = start + segAngle;
+                const seg = wheelSegments[i];
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, radius, start, end);
+                ctx.closePath();
+                ctx.fillStyle = seg.color;
+                ctx.fill();
+
+                ctx.strokeStyle = "rgba(0,0,0,0.35)";
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                /* Texte */
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(start + segAngle / 2);
+                ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
+
+                if (seg.value === "BANQUEROUTE") {
+                    ctx.font = "bold 20px Cinzel, serif";
+                    ctx.fillStyle = "#ff4444";
+                    ctx.fillText("BANQUEROUTE", radius - 18, 0);
+                } else {
+                    ctx.font = "bold 36px Cinzel, serif";
+                    ctx.fillStyle = "#ffffff";
+                    ctx.shadowColor = "rgba(0,0,0,0.5)";
+                    ctx.shadowBlur = 4;
+                    ctx.fillText(seg.label, radius - 22, 0);
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.restore();
+            }
+
+            /* Assombrir les bords */
+            const depthGrad = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius);
+            depthGrad.addColorStop(0, "rgba(255,255,255,0.07)");
+            depthGrad.addColorStop(0.6, "rgba(0,0,0,0)");
+            depthGrad.addColorStop(1, "rgba(0,0,0,0.25)");
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = depthGrad;
+            ctx.fill();
+
+            /* Rivets dorés entre segments */
+            for (let i = 0; i < segCount; i++) {
+                const a = wheelAngle + i * segAngle;
+                const dx = cx + Math.cos(a) * (radius - 3);
+                const dy = cy + Math.sin(a) * (radius - 3);
+                ctx.beginPath();
+                ctx.arc(dx, dy, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = "#d4a017";
+                ctx.fill();
+                ctx.strokeStyle = "#8b6914";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            /* Centre (moyeu) */
+            const hubGrad = ctx.createRadialGradient(cx - 5, cy - 5, 0, cx, cy, 34);
+            hubGrad.addColorStop(0, "#f5c842");
+            hubGrad.addColorStop(0.6, "#d4a017");
+            hubGrad.addColorStop(1, "#8b6914");
+            ctx.beginPath();
+            ctx.arc(cx, cy, 32, 0, 2 * Math.PI);
+            ctx.fillStyle = hubGrad;
+            ctx.fill();
+            ctx.strokeStyle = "#6b4f10";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
+            ctx.fillStyle = "#1a1510";
+            ctx.fill();
+        }
+
+        function getWinningSegment() {
+            const pointerAngle = -Math.PI / 2;
+            let norm = (pointerAngle - wheelAngle) % (2 * Math.PI);
+            if (norm < 0) norm += 2 * Math.PI;
+            const idx = Math.floor(norm / segAngle) % segCount;
+            return wheelSegments[idx];
+        }
+
+        /* ============================================
+           ROUE — ANIMATION
+        ============================================ */
+        function spinWheel() {
+            if (isSpinning || gameWon) return;
+            isSpinning = true;
+            canChooseConsonant = false;
+            spinBtnEl.disabled = true;
+            guessBtnWheelEl.disabled = true;
+            wheelResultEl.textContent = "";
+            wheelResultEl.className = "wheel-result";
+            infoLineEl.textContent = "La roue tourne...";
+
+            spinVelocity = 0.22 + Math.random() * 0.22;
+
+            function animate() {
+                wheelAngle += spinVelocity;
+                spinVelocity *= 0.984;
+                drawWheel();
+
+                if (spinVelocity > 0.001) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    handleWheelResult(getWinningSegment());
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function handleWheelResult(segment) {
+            currentWheelValue = segment.value;
+
+            if (segment.value === "BANQUEROUTE") {
+                goldBalance = 0;
+                updateGoldDisplay();
+                wheelResultEl.textContent = "Banqueroute ! Solde remis a zero.";
+                wheelResultEl.className = "wheel-result negative";
+                showToast("Banqueroute ! Toutes vos pieces perdues.", "error");
+                infoLineEl.textContent = "Banqueroute ! Faites tourner la roue a nouveau.";
+                currentWheelValue = null;
+                spinBtnEl.disabled = false;
+
+            } else {
+                wheelResultEl.textContent = segment.value + " pieces d'or ! Choisissez une consonne.";
+                wheelResultEl.className = "wheel-result positive";
+                infoLineEl.textContent = "Roue : " + segment.value + " PO. Choisissez une consonne.";
+                canChooseConsonant = true;
+            }
+
+            updateKeyboard();
+        }
+
+        /* ============================================
+           AFFICHAGE DE LA PHRASE
+        ============================================ */
+        function renderPhrase() {
+            phraseContainerEl.innerHTML = "";
+            for (const char of currentPhrase) {
+                if (char === " ") {
+                    const gap = document.createElement("span");
+                    gap.className = "space-gap";
+                    phraseContainerEl.appendChild(gap);
+                } else if (char === "'") {
+                    /* Apostrophe toujours visible */
+                    const box = document.createElement("span");
+                    box.className = "letter-box apostrophe";
+                    box.textContent = "'";
+                    phraseContainerEl.appendChild(box);
+                } else {
+                    const norm = normalizeLetter(char);
+                    const box = document.createElement("span");
+                    box.className = "letter-box";
+
+                    if (revealedLetters.has(norm)) {
+                        box.classList.add("revealed");
+                        box.textContent = char;
+                    }
+                    if (gameWon) {
+                        box.classList.add("won");
+                        box.textContent = char;
+                    }
+
+                    phraseContainerEl.appendChild(box);
+                }
+            }
+        }
+
+        /* ============================================
+           CLAVIER VIRTUEL
+        ============================================ */
+        function buildKeyboard() {
+            consonantGridEl.innerHTML = "";
+            vowelGridEl.innerHTML = "";
+
+            "BCDFGHJKLMNPQRSTVWXZ".split("").forEach(letter => {
+                const btn = document.createElement("button");
+                btn.className = "key-btn";
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                btn.disabled = true;
+                btn.setAttribute("aria-label", "Consonne " + letter);
+                btn.addEventListener("click", () => chooseConsonant(letter));
+                consonantGridEl.appendChild(btn);
+            });
+
+            VOWELS.forEach(letter => {
+                const btn = document.createElement("button");
+                btn.className = "key-btn vowel";
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                btn.disabled = true;
+                btn.setAttribute("aria-label", "Voyelle " + letter);
+                btn.addEventListener("click", () => chooseVowel(letter));
+                vowelGridEl.appendChild(btn);
+            });
+        }
+
+        function updateKeyboard() {
+            consonantGridEl.querySelectorAll(".key-btn").forEach(btn => {
+                const l = btn.dataset.letter;
+                if (usedLetters.has(l)) {
+                    btn.disabled = true;
+                    btn.classList.remove("vowel");
+                    btn.classList.add(revealedLetters.has(l) ? "used-correct" : "used-wrong");
+                } else {
+                    btn.disabled = !(canChooseConsonant && typeof currentWheelValue === "number");
+                    btn.classList.remove("used-correct", "used-wrong");
+                }
+            });
+
+            vowelGridEl.querySelectorAll(".key-btn").forEach(btn => {
+                const l = btn.dataset.letter;
+                if (usedLetters.has(l)) {
+                    btn.disabled = true;
+                    btn.classList.add(revealedLetters.has(l) ? "used-correct" : "used-wrong");
+                } else {
+                    btn.disabled = isSpinning || gameWon;
+                    btn.classList.remove("used-correct", "used-wrong");
+                }
+            });
+
+            guessBtnWheelEl.disabled = isSpinning || gameWon;
+            spinBtnEl.disabled = isSpinning || canChooseConsonant || gameWon;
+        }
+
+        /* ============================================
+           CHOIX D'UNE CONSONNE
+        ============================================ */
+        function chooseConsonant(letter) {
+            if (!canChooseConsonant || usedLetters.has(letter) || typeof currentWheelValue !== "number") return;
+
+            usedLetters.add(letter);
+            const count = countInPhrase(letter);
+
+            if (count > 0) {
+                revealedLetters.add(letter);
+                const earned = currentWheelValue * count;
+                goldBalance += earned;
+                updateGoldDisplay();
+                showToast(count + " \"" + letter + "\" trouve" + (count > 1 ? "s" : "") + " ! +" + earned + " PO", "success");
+                infoLineEl.textContent = "+" + earned + " PO gagnes ! Continuez.";
+                renderPhrase();
+                checkWin();
+            } else {
+                showToast("Pas de \"" + letter + "\" dans l'expression.", "error");
+                infoLineEl.textContent = "Pas de \"" + letter + "\". Faites tourner la roue.";
+                canChooseConsonant = false;
+                currentWheelValue = null;
+            }
+
+            updateKeyboard();
+        }
+
+        /* ============================================
+           CHOIX D'UNE VOYELLE — coût = occurrences × 5 PO
+        ============================================ */
+        function chooseVowel(letter) {
+            if (usedLetters.has(letter) || isSpinning || gameWon) return;
+
+            const count = countInPhrase(letter);
+            const cost = count * VOWEL_COST_PER_OCCURRENCE;
+
+            usedLetters.add(letter);
+            goldBalance -= cost;
+            updateGoldDisplay();
+
+            if (count > 0) {
+                revealedLetters.add(letter);
+                renderPhrase();
+                if (count === 1) {
+                    showToast("1 \"" + letter + "\" trouve. Cout : " + cost + " PO", "info");
+                } else {
+                    showToast(count + " \"" + letter + "\" trouves. Cout : " + cost + " PO", "info");
+                }
+                infoLineEl.textContent = "Voyelle \"" + letter + "\" revelee. Cout : " + cost + " PO.";
+                checkWin();
+            } else {
+                showToast("Pas de \"" + letter + "\". Cout : " + cost + " PO.", "error");
+                infoLineEl.textContent = "Pas de \"" + letter + "\". " + cost + " PO depenses.";
+            }
+
+            canChooseConsonant = false;
+            currentWheelValue = null;
+            updateKeyboard();
+        }
+
+        /* ============================================
+           VICTOIRE
+        ============================================ */
+        function checkWin() {
+            const allRevealed = [...currentPhrase].every(ch => {
+                if (ch === " " || ch === "'") return true;
+                if (!isAlpha(ch)) return true;
+                return revealedLetters.has(normalizeLetter(ch));
+            });
+
+            if (!allRevealed) return;
+
+            gameWon = true;
+            canChooseConsonant = false;
+
+            /* Révéler toutes les lettres avec leur accent */
+            revealedLetters.clear();
+            for (const ch of currentPhrase) {
+                if (isAlpha(ch)) revealedLetters.add(normalizeLetter(ch));
+            }
+            renderPhrase();
+            updateKeyboard();
+
+            goldBalance += 500;
+            updateGoldDisplay();
+
+            /* Lancer la célébration des guirlandes */
+            startCelebration();
+
+            setTimeout(() => {
+                showModal(
+                    "Bravo !",
+                    '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
+                    '<p style="font-family:Cinzel,serif;font-size:1.2rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
+                    '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
+                    '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
+                    [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
+                );
+            }, 600);
+        }
+
+        /* ============================================
+           PROPOSER LA SOLUTION
+        ============================================ */
+        function openGuessModal() {
+            showModal(
+                "Faire une proposition",
+                '<input type="text" class="modal-input" id="guessInput" placeholder="Tapez votre reponse..." autocomplete="off">',
+                [
+                    { text: "Valider", cls: "primary", action: submitGuess },
+                    { text: "Annuler", cls: "secondary", action: closeModal }
+                ]
+            );
+            setTimeout(() => {
+                const inp = document.getElementById("guessInput");
+                if (inp) inp.focus();
+            }, 120);
+        }
+
+        function submitGuess() {
+            const inp = document.getElementById("guessInput");
+            if (!inp) return;
+
+            /* Normaliser la saisie : majuscules, sans accents, un seul espace */
+            const guess = inp.value
+                .trim()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .toUpperCase()
+                .replace(/\s+/g, " ");
+
+            /* Comparer avec la phrase normalisée */
+            const target = currentPhrase.toUpperCase().replace(/\s+/g, " ");
+            closeModal();
+
+            if (guess === target) {
+                gameWon = true;
+                canChooseConsonant = false;
+
+                revealedLetters.clear();
+                for (const ch of currentPhrase) {
+                    if (isAlpha(ch)) revealedLetters.add(normalizeLetter(ch));
+                }
+                renderPhrase();
+                updateKeyboard();
+
+                goldBalance += 500;
+                updateGoldDisplay();
+
+                startCelebration();
+
+                setTimeout(() => {
+                    showModal(
+                        "Bravo !",
+                        '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
+                        '<p style="font-family:Cinzel,serif;font-size:1.2rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
+                        '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
+                        '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
+                        [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
+                    );
+                }, 400);
+            } else {
+                showToast("Mauvaise reponse !", "error");
+                infoLineEl.textContent = "Mauvaise reponse. Continuez a jouer !";
+                canChooseConsonant = false;
+                currentWheelValue = null;
+                updateKeyboard();
+            }
+        }
+
+        /* ============================================
+           MODAL
+        ============================================ */
+        function showModal(title, contentHTML, buttons) {
+            modalTitleEl.textContent = title;
+            modalContentEl.innerHTML = contentHTML;
+            modalActionsEl.innerHTML = "";
+            buttons.forEach(b => {
+                const el = document.createElement("button");
+                el.className = "modal-btn " + (b.cls || "");
+                el.textContent = b.text;
+                el.addEventListener("click", b.action);
+                modalActionsEl.appendChild(el);
+            });
+            modalOverlayEl.classList.add("active");
+        }
+
+        function closeModal() {
+            modalOverlayEl.classList.remove("active");
+        }
+
+        /* ============================================
+           TOASTS
+        ============================================ */
+        function showToast(message, type) {
+            type = type || "info";
+            const t = document.createElement("div");
+            t.className = "toast " + type;
+            t.textContent = message;
+            toastContainerEl.appendChild(t);
+            setTimeout(() => { if (t.parentNode) t.remove(); }, 3200);
+        }
+
+        /* ============================================
+           AFFICHAGE DES PIÈCES D'OR
+        ============================================ */
+        function updateGoldDisplay() {
+            goldDisplayEl.textContent = goldBalance;
+            goldDisplayEl.className = "gold-amount" + (goldBalance < 0 ? " negative" : "");
+        }
+
+        /* ============================================
+           NOUVELLE PARTIE
+        ============================================ */
+        function startNewGame() {
+            closeModal();
+
+            /* Arrêter une éventuelle célébration en cours */
+            if (celebrationInterval) {
+                clearInterval(celebrationInterval);
+                celebrationInterval = null;
+            }
+            document.body.classList.remove("celebrating");
+            restoreGarlandColors();
+
+            const idx = Math.floor(Math.random() * phrases.length);
+            currentPhrase = phrases[idx].text;
+            currentDisplayPhrase = phrasesDisplay[idx];
+            currentCategory = phrases[idx].cat;
+            revealedLetters = new Set();
+            usedLetters = new Set();
+            currentWheelValue = null;
+            canChooseConsonant = false;
+            gameWon = false;
+            isSpinning = false;
+
+            categoryDisplayEl.textContent = currentCategory;
+            wheelResultEl.textContent = "";
+            wheelResultEl.className = "wheel-result";
+            infoLineEl.textContent = "Faites tourner la roue pour commencer !";
+
+            renderPhrase();
+            buildKeyboard();
+            updateKeyboard();
+            drawWheel();
+        }
+
+        /* ============================================
+           ÉVÉNEMENTS
+        ============================================ */
+        spinBtnEl.addEventListener("click", spinWheel);
+        guessBtnWheelEl.addEventListener("click", openGuessModal);
+        newGameBtnEl.addEventListener("click", startNewGame);
+
+        backBtnEl.addEventListener("click", () => {
+            showModal(
+                "Retour au Village",
+                '<p style="color:var(--muted);">Voulez-vous vraiment quitter la partie en cours ?</p>',
+                [
+                    { text: "Quitter", cls: "primary", action: () => { closeModal; window.location.href = "#"; } },
+                    { text: "Rester", cls: "secondary", action: closeModal }
+                ]
+            );
+        });
+
+        document.addEventListener("keydown", e => {
+            if (!modalOverlayEl.classList.contains("active")) return;
+            if (e.key === "Enter") {
+                const inp = document.getElementById("guessInput");
+                if (inp && document.activeElement === inp) submitGuess();
+            }
+            if (e.key === "Escape") closeModal();
+        });
+
+        modalOverlayEl.addEventListener("click", e => {
+            if (e.target === modalOverlayEl) closeModal();
+        });
+
+        /* ============================================
+           INITIALISATION
+        ============================================ */
+        createGarlands();
+        startNewGame();
+    </script>
 </body>
 </html>
