@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le Village du hasard</title>
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/pierreg78-maker/village/main/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -84,7 +85,7 @@
             z-index: 1;
         }
 
-        /* ---- DECORATIONS FLOTTANTES ---- */
+        /* ---- FORMES FLOTTANTES ---- */
         .floating-shapes {
             position: absolute;
             top: 0;
@@ -124,7 +125,7 @@
             z-index: 2;
         }
 
-        /* ---- GRILLE DE CARTES ---- */
+        /* ---- GRILLE ---- */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -149,13 +150,61 @@
             box-shadow: var(--shadow-card-hover);
         }
 
-        .card-img {
+        /* ---- ZONE ÉMOJI (remplace l'image) ---- */
+        .card-icon {
             width: 100%;
             height: 190px;
-            object-fit: cover;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        .card-icon::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .card-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -15%;
+            left: -10%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .card-icon span {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+            transition: transform 0.35s ease;
+        }
+
+        .card:hover .card-icon span {
+            transform: scale(1.15) rotate(-4deg);
+        }
+
+        /* Dégradés par carte */
+        .icon-vitrine    { background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); }
+        .icon-mots       { background: linear-gradient(135deg, #00cec9 0%, #0984e3 100%); }
+        .icon-loto       { background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); }
+        .icon-blackjack  { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        .icon-421        { background: linear-gradient(135deg, #00b894 0%, #00a085 100%); }
+        .icon-roue       { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); }
+        .icon-tresor     { background: linear-gradient(135deg, #f9ca24 0%, #f0932b 100%); }
+
+        /* ---- CORPS DE CARTE ---- */
         .card-body {
             padding: 22px 24px 26px;
             flex: 1;
@@ -211,19 +260,6 @@
             color: var(--accent);
             text-decoration: none;
         }
-<!-- Bouton retour -->
-.back-btn {
-            display: block;
-            text-align: center;
-            margin: 60px auto 40px;
-            padding: 14px 40px;
-            background: #6b7280;
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-        }
-        
 
         /* ---- RESPONSIVE ---- */
         @media (max-width: 680px) {
@@ -231,11 +267,9 @@
                 grid-template-columns: 1fr;
                 gap: 24px;
             }
-
             header {
                 padding: 40px 16px 48px;
             }
-
             main {
                 padding: 0 16px;
             }
@@ -262,19 +296,19 @@
     <main>
         <div class="grid">
 
-            <!-- Carte 1 – Vitrine enchantée -->
+            <!-- Vitrine enchantée -->
             <a href="https://pierreg78-maker.github.io/vitrine-enchantee/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/vitrine-enchantee/600/380.jpg" alt="Vitrine enchantée">
+                <div class="card-icon icon-vitrine"><span>🔮</span></div>
                 <div class="card-body">
                     <h2>Vitrine enchantée</h2>
-                    <p>Inscrivez-vous (un prénom suffit) et amassez des pièces d'or dans les jeux du village. Possibilité d'acquérir également toutes sortes d'objets.</p>
+                    <p>Une vitrine magique qui révèle ses mystères au gré de votre curiosité. Cliquez, explorez et laissez-vous surprendre par ce que l'inattendu réserve.</p>
                     <span class="card-btn">Découvrir</span>
                 </div>
             </a>
 
-            <!-- Carte 2 – Mots mêlés -->
+            <!-- Mots mêlés -->
             <a href="https://pierreg78-maker.github.io/mots-meles/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/mots-meles-grille/600/380.jpg" alt="Mots mêlés">
+                <div class="card-icon icon-mots"><span>Ⓐ</span></div>
                 <div class="card-body">
                     <h2>Mots mêlés</h2>
                     <p>Cherchez et trouvez les mots cachés dans la grille ! Un jeu de patience et d'observation où chaque partie mêle hasard et réflexion.</p>
@@ -282,29 +316,29 @@
                 </div>
             </a>
 
-            <!-- Carte 3 – Loto -->
+            <!-- Loto -->
             <a href="https://pierreg78-maker.github.io/loto/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/loto-boules/600/380.jpg" alt="Loto">
+                <div class="card-icon icon-loto"><span>🎫</span></div>
                 <div class="card-body">
                     <h2>Loto</h2>
-                    <p>Tirez les numéros et cochez la grille ! Le pur hasard décide du gagnant. Serez-vous le premier à completer une quine ou un carton plein ?</p>
+                    <p>Tirez les numéros et cochez vos cartons ! Le pur hasard décide du gagnant. Serez-vous le premier à compléter une quine ou un carton plein ?</p>
                     <span class="card-btn">Jouer</span>
                 </div>
             </a>
 
-            <!-- Carte 4 – Blackjack -->
+            <!-- Blackjack -->
             <a href="https://pierreg78-maker.github.io/blackjack/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/blackjack-cards/600/380.jpg" alt="Blackjack">
+                <div class="card-icon icon-blackjack"><span>🃏</span></div>
                 <div class="card-body">
                     <h2>Blackjack</h2>
-                    <p>Rapprochez-vous de 21 sans les dépasser ! Tirer une carte ou rester; prenez la bonne décision… et croisez les doigts pour que la chance vous sourit.</p>
+                    <p>Rapprochez-vous de 21 sans les dépasser ! Distribuez les cartes, prenez les bonnes décisions… et croisez les doigts pour que la chance vous sourit.</p>
                     <span class="card-btn">Jouer</span>
                 </div>
             </a>
 
-            <!-- Carte 5 – 421 -->
+            <!-- 421 -->
             <a href="https://pierreg78-maker.github.io/421/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/dice-421-game/600/380.jpg" alt="421">
+                <div class="card-icon icon-421"><span>🎲</span></div>
                 <div class="card-body">
                     <h2>421</h2>
                     <p>Lancez les dés et tentez d'obtenir le fameux 4-2-1 ! Un classique des jeux de dés où chaque lancer peut tout changer. À vous de jouer !</p>
@@ -312,13 +346,23 @@
                 </div>
             </a>
 
-            <!-- Carte 6 – La Roue de la Fortune -->
+            <!-- La Roue de la Fortune -->
             <a href="https://pierreg78-maker.github.io/la_roue_de_la_fortune/" class="card">
-                <img class="card-img" src="https://picsum.photos/seed/roue-fortune-spin/600/380.jpg" alt="La Roue de la Fortune">
+                <div class="card-icon icon-roue"><span>🎡</span></div>
                 <div class="card-body">
                     <h2>La Roue de la Fortune</h2>
-                    <p>Version test, gains non comptabilisés. Faites tourner la roue et laissez le destin choisir ! Chaque segment cache une surprise. Rien ne dépend de vous… et c'est tout le charme !</p>
+                    <p>Faites tourner la roue et laissez le destin choisir ! Chaque segment cache une surprise. Rien ne dépend de vous… et c'est tout le charme !</p>
                     <span class="card-btn">Jouer</span>
+                </div>
+            </a>
+
+            <!-- Trésor des âges -->
+            <a href="https://pierreg78-maker.github.io/tresor_des_ages/" class="card">
+                <div class="card-icon icon-tresor"><span>🏺</span></div>
+                <div class="card-body">
+                    <h2>Trésor des âges</h2>
+                    <p>Partez à la chasse au trésor à travers les époques ! Fouillez, déchiffrez et espérez que le hasard place la bonne découverte sur votre chemin.</p>
+                    <span class="card-btn">Découvrir</span>
                 </div>
             </a>
 
@@ -327,10 +371,7 @@
 
     <!-- ====== FOOTER ====== -->
     <footer>
-<!-- Bouton retour à l'Atelier Mémoire -->
-        <a href="https://pierreg78-maker.github.io/Atelier/" class="back-btn">
-            ← Retour à l'Atelier Mémoire
-        </a>
+        <p>&copy; 2025 Le Village du hasard &mdash; Tous droits réservés</p>
     </footer>
 
 </body>
