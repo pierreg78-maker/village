@@ -45,14 +45,13 @@
             z-index: 0;
         }
 
-        /* ============ GUIRLANDES — 4 CÔTÉS ============ */
+        /* ============ GUIRLANDES ============ */
         .garland {
             position: fixed;
             z-index: 1000;
             pointer-events: none;
         }
 
-        /* Fils horizontaux */
         .garland-top::after,
         .garland-bottom::after {
             content: '';
@@ -65,7 +64,6 @@
         .garland-top::after { top: 9px; }
         .garland-bottom::after { bottom: 9px; }
 
-        /* Fils verticaux */
         .garland-left::after,
         .garland-right::after {
             content: '';
@@ -78,7 +76,6 @@
         .garland-left::after { left: 9px; }
         .garland-right::after { right: 9px; }
 
-        /* Guirlandes haut et bas */
         .garland-top,
         .garland-bottom {
             left: 0; right: 0;
@@ -93,7 +90,6 @@
         .garland-top .garland-bulb { margin-top: 10px; }
         .garland-bottom .garland-bulb { margin-bottom: 10px; margin-top: auto; }
 
-        /* Guirlandes gauche et droite */
         .garland-left,
         .garland-right {
             top: 0; bottom: 0;
@@ -109,7 +105,6 @@
         .garland-left .garland-bulb,
         .garland-right .garland-bulb { margin-left: 12px; }
 
-        /* Ampoule */
         .garland-bulb {
             width: 7px;
             height: 10px;
@@ -120,7 +115,6 @@
             animation: bulbGlow 2s ease-in-out infinite;
         }
 
-        /* Connecteurs haut/bas */
         .garland-top .garland-bulb::before,
         .garland-bottom .garland-bulb::before {
             content: '';
@@ -132,7 +126,6 @@
         .garland-top .garland-bulb::before { top: -5px; }
         .garland-bottom .garland-bulb::before { bottom: -5px; top: auto; }
 
-        /* Connecteurs gauche/droite */
         .garland-left .garland-bulb::before,
         .garland-right .garland-bulb::before {
             content: '';
@@ -149,26 +142,17 @@
             50% { opacity: 0.25; filter: brightness(0.5); }
         }
 
-        /* ============ MODE CÉLÉBRATION DES GUIRLANDES ============ */
+        /* Célébration */
         body.celebrating .garland-bulb {
             animation: bulbCelebration 0.2s ease-in-out infinite !important;
             transform: scale(1.6);
         }
 
         @keyframes bulbCelebration {
-            0%, 100% {
-                opacity: 1;
-                filter: brightness(3) saturate(2);
-                transform: scale(1.6);
-            }
-            50% {
-                opacity: 0.2;
-                filter: brightness(0.6);
-                transform: scale(0.8);
-            }
+            0%, 100% { opacity: 1; filter: brightness(3) saturate(2); transform: scale(1.6); }
+            50% { opacity: 0.2; filter: brightness(0.6); transform: scale(0.8); }
         }
 
-        /* Fils qui s'illuminent en arc-en-ciel */
         body.celebrating .garland-top::after,
         body.celebrating .garland-bottom::after {
             height: 3px;
@@ -187,16 +171,10 @@
             box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
         }
 
-        @keyframes wireGlowH {
-            from { background-position: 0% 0%; }
-            to { background-position: 300% 0%; }
-        }
-        @keyframes wireGlowV {
-            from { background-position: 0% 0%; }
-            to { background-position: 0% 300%; }
-        }
+        @keyframes wireGlowH { from { background-position: 0% 0%; } to { background-position: 300% 0%; } }
+        @keyframes wireGlowV { from { background-position: 0% 0%; } to { background-position: 0% 300%; } }
 
-        /* ============ CONTENEUR PRINCIPAL ============ */
+        /* ============ CONTENEUR ============ */
         .game-container {
             max-width: 880px;
             margin: 0 auto;
@@ -254,7 +232,7 @@
             letter-spacing: 3px;
         }
 
-        /* ============ PHRASE — CASES À BORDURE FINE ============ */
+        /* ============ PHRASE ============ */
         .phrase-container {
             display: flex;
             flex-wrap: wrap;
@@ -284,7 +262,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Apostrophe toujours visible, style neutre */
         .letter-box.apostrophe {
             border-color: rgba(253, 246, 227, 0.12);
             background: transparent;
@@ -311,10 +288,7 @@
             100% { transform: scale(1); }
         }
 
-        .space-gap {
-            display: inline-block;
-            width: 18px;
-        }
+        .space-gap { display: inline-block; width: 18px; }
 
         /* ============ SECTION ROUE ============ */
         .wheel-section {
@@ -375,29 +349,6 @@
         }
         .spin-btn:active:not(:disabled) { transform: translateY(0); }
         .spin-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-        /* Bouton "Faire une proposition" sous la roue */
-        .guess-btn-wheel {
-            margin-top: 8px;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--fg);
-            padding: 8px 26px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 0.88rem;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .guess-btn-wheel:hover:not(:disabled) {
-            border-color: var(--accent);
-            background: rgba(212, 160, 23, 0.1);
-            transform: translateY(-1px);
-        }
-        .guess-btn-wheel:disabled { opacity: 0.25; cursor: not-allowed; }
-        .guess-btn-wheel i { margin-right: 5px; }
 
         .wheel-result {
             margin-top: 10px;
@@ -463,18 +414,9 @@
             transform: translateY(-2px);
         }
 
-        .key-btn:disabled {
-            opacity: 0.18;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
+        .key-btn:disabled { opacity: 0.18; cursor: not-allowed; transform: none !important; }
         .key-btn.vowel { border-color: rgba(192, 57, 43, 0.35); }
-
-        .key-btn.vowel:hover:not(:disabled) {
-            background: rgba(192, 57, 43, 0.18);
-            border-color: #c0392b;
-        }
+        .key-btn.vowel:hover:not(:disabled) { background: rgba(192, 57, 43, 0.18); border-color: #c0392b; }
 
         .key-btn.used-correct {
             opacity: 1 !important;
@@ -531,7 +473,7 @@
             line-height: 1.4;
         }
 
-        /* ============ BOUTON RETOUR AU VILLAGE — ROSE ============ */
+        /* ============ RETOUR AU VILLAGE — ROSE ============ */
         .back-btn {
             display: block;
             width: 100%;
@@ -592,14 +534,8 @@
         .toast.error { border-color: var(--danger); color: #e07070; }
         .toast.info { border-color: var(--accent); color: var(--accent-glow); }
 
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateY(-16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes toastOut {
-            from { opacity: 1; }
-            to { opacity: 0; transform: translateY(-10px); }
-        }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
 
         /* ============ MODAL ============ */
         .modal-overlay {
@@ -624,11 +560,7 @@
             text-align: center;
             animation: modalIn 0.3s ease-out;
         }
-
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.92); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
 
         .modal-title {
             font-family: 'Cinzel', serif;
@@ -672,40 +604,20 @@
             transition: all 0.2s ease;
             border: none;
         }
-
-        .modal-btn.primary {
-            background: linear-gradient(135deg, #d4a017, #b8860b);
-            color: #1a1510;
-        }
-
-        .modal-btn.secondary {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--muted);
-        }
-
+        .modal-btn.primary { background: linear-gradient(135deg, #d4a017, #b8860b); color: #1a1510; }
+        .modal-btn.secondary { background: transparent; border: 1px solid var(--border); color: var(--muted); }
         .modal-btn:hover { transform: translateY(-1px); }
 
         /* ============ RESPONSIVE ============ */
         @media (max-width: 480px) {
-            .letter-box {
-                width: 24px;
-                height: 32px;
-                font-size: 0.82rem;
-            }
+            .letter-box { width: 24px; height: 32px; font-size: 0.82rem; }
             .space-gap { width: 10px; }
-            .key-btn {
-                width: 30px;
-                height: 34px;
-                font-size: 0.78rem;
-            }
+            .key-btn { width: 30px; height: 34px; font-size: 0.78rem; }
             .game-container { padding: 40px 8px 70px; }
             .phrase-container { padding: 12px 8px; gap: 3px; }
             .spin-btn { padding: 10px 24px; font-size: 0.9rem; }
-            .guess-btn-wheel { padding: 7px 18px; font-size: 0.82rem; }
         }
 
-        /* ============ RÉDUCTION DE MOUVEMENT ============ */
         @media (prefers-reduced-motion: reduce) {
             .garland-bulb { animation: none !important; opacity: 0.7; }
             .letter-box.revealed { animation: none !important; }
@@ -716,10 +628,8 @@
 </head>
 <body>
 
-    <!-- Toasts -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
         <div class="modal-box">
             <div class="modal-title" id="modalTitle"></div>
@@ -750,9 +660,6 @@
             <button class="spin-btn" id="spinBtn" aria-label="Faire tourner la roue">
                 <i class="fas fa-sync-alt" aria-hidden="true"></i> Faire tourner la roue
             </button>
-            <button class="guess-btn-wheel" id="guessBtnWheel" disabled aria-label="Faire une proposition">
-                <i class="fas fa-lightbulb" aria-hidden="true"></i> Faire une proposition
-            </button>
             <div class="wheel-result" id="wheelResult" aria-live="polite"></div>
         </section>
 
@@ -767,16 +674,18 @@
             <div class="keyboard-grid" id="vowelGrid"></div>
         </section>
 
+        <!-- BOUTONS D'ACTIONS : proposition + nouvelle partie -->
         <section class="actions-section">
+            <button class="action-btn" id="guessBtn" disabled aria-label="Faire une proposition">
+                <i class="fas fa-lightbulb" aria-hidden="true"></i> Faire une proposition
+            </button>
             <button class="action-btn" id="newGameBtn" aria-label="Nouvelle partie">
                 <i class="fas fa-redo" aria-hidden="true"></i> Nouvelle partie
             </button>
         </section>
 
-        <!-- Ligne d'info AU-DESSUS du bouton retour -->
         <div class="info-line" id="infoLine" aria-live="polite">Faites tourner la roue pour commencer !</div>
 
-        <!-- Bouton Retour au Village en rose -->
         <button class="back-btn" id="backBtn" aria-label="Retour au village">
             <i class="fas fa-arrow-left" aria-hidden="true"></i> Retour au Village
         </button>
@@ -784,8 +693,7 @@
 
     <script>
         /* ============================================
-           EXPRESSIONS FRANÇAISES
-           (œ remplacé par oe pour la logique de jeu)
+           EXPRESSIONS
         ============================================ */
         const phrases = [
             { text: "Avoir le cafard", cat: "Expression courante" },
@@ -840,7 +748,6 @@
             { text: "Etre loge a la meme enseigne", cat: "Expression courante" }
         ];
 
-        /* Version affichée avec accents (pour le rendu final et la modal) */
         const phrasesDisplay = [
             "Avoir le cafard",
             "Se creuser la cervelle",
@@ -894,29 +801,34 @@
             "Être logé à la même enseigne"
         ];
 
-        /* Segments de la roue */
+        /* ============================================
+           ROUE — 16 SEGMENTS (2 BANQUEROUTE opposés)
+           Indices 7 et 15 = 8 segments d'écart = opposés
+        ============================================ */
         const wheelSegments = [
-            { value: 100,  color: "#c0392b", label: "100" },
-            { value: 200,  color: "#e67e22", label: "200" },
-            { value: 300,  color: "#f1c40f", label: "300" },
-            { value: 400,  color: "#27ae60", label: "400" },
-            { value: 500,  color: "#1abc9c", label: "500" },
-            { value: 600,  color: "#d35400", label: "600" },
-            { value: 700,  color: "#16a085", label: "700" },
-            { value: 800,  color: "#e74c3c", label: "800" },
-            { value: 900,  color: "#f39c12", label: "900" },
-            { value: 1000, color: "#2ecc71", label: "1000" },
-            { value: 1500, color: "#e67e22", label: "1500" },
-            { value: 2000, color: "#c0392b", label: "2000" },
-            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" },
-            { value: 10,   color: "#4a5568", label: "10" }
+            { value: 100,  color: "#c0392b", label: "100" },         /* 0 */
+            { value: 200,  color: "#e67e22", label: "200" },         /* 1 */
+            { value: 300,  color: "#f1c40f", label: "300" },         /* 2 */
+            { value: 400,  color: "#27ae60", label: "400" },         /* 3 */
+            { value: 500,  color: "#1abc9c", label: "500" },         /* 4 */
+            { value: 600,  color: "#d35400", label: "600" },         /* 5 */
+            { value: 700,  color: "#16a085", label: "700" },         /* 6 */
+            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" }, /* 7 */
+            { value: 800,  color: "#e74c3c", label: "800" },         /* 8 */
+            { value: 900,  color: "#f39c12", label: "900" },         /* 9 */
+            { value: 1000, color: "#2ecc71", label: "1000" },        /* 10 */
+            { value: 1500, color: "#e67e22", label: "1500" },        /* 11 */
+            { value: 2000, color: "#c0392b", label: "2000" },        /* 12 */
+            { value: 50,   color: "#4a5568", label: "50" },          /* 13 */
+            { value: 10,   color: "#34495e", label: "10" },          /* 14 */
+            { value: "BANQUEROUTE", color: "#1a1a1a", label: "BANQUEROUTE" }  /* 15 */
         ];
 
         const VOWELS = ["A", "E", "I", "O", "U", "Y"];
         const VOWEL_COST_PER_OCCURRENCE = 5;
 
         /* ============================================
-           ÉTAT DU JEU
+           ÉTAT
         ============================================ */
         let currentPhrase = "";
         let currentDisplayPhrase = "";
@@ -932,17 +844,14 @@
         let spinVelocity = 0;
         let celebrationInterval = null;
 
-        /* Couleurs originales des guirlandes (pour restauration) */
-        let garlandOriginalColors = [];
-
         /* ============================================
-           RÉFÉRENCES DOM
+           DOM
         ============================================ */
         const goldDisplayEl     = document.getElementById("goldDisplay");
         const categoryDisplayEl = document.getElementById("categoryDisplay");
         const phraseContainerEl = document.getElementById("phraseContainer");
         const spinBtnEl         = document.getElementById("spinBtn");
-        const guessBtnWheelEl   = document.getElementById("guessBtnWheel");
+        const guessBtnEl        = document.getElementById("guessBtn");
         const wheelResultEl     = document.getElementById("wheelResult");
         const consonantGridEl   = document.getElementById("consonantGrid");
         const vowelGridEl       = document.getElementById("vowelGrid");
@@ -958,19 +867,17 @@
         const modalActionsEl    = document.getElementById("modalActions");
 
         /* ============================================
-           NORMALISATION DES LETTRES (accents → non accentuées)
+           UTILITAIRES
         ============================================ */
         function normalizeLetter(ch) {
             return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         }
 
-        /* Vérifie si un caractère est une lettre (A-Z après normalisation) */
         function isAlpha(ch) {
             const n = normalizeLetter(ch);
             return n >= "A" && n <= "Z";
         }
 
-        /* Compter les occurrences d'une lettre dans la phrase (après normalisation) */
         function countInPhrase(letter) {
             let n = 0;
             for (const ch of currentPhrase) {
@@ -980,7 +887,7 @@
         }
 
         /* ============================================
-           GUIRLANDES — 4 CÔTÉS
+           GUIRLANDES
         ============================================ */
         function createGarlands() {
             const bulbColors = [
@@ -1009,7 +916,6 @@
                     bulb.style.boxShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
                     bulb.style.animationDelay = (i * 0.18 % 2).toFixed(2) + "s";
                     bulb.style.animationDuration = (1.8 + (i % 3) * 0.4).toFixed(1) + "s";
-                    /* Stocker la couleur originale */
                     bulb.dataset.origColor = col;
                     bulb.dataset.origShadow = "0 0 5px 2px " + col + ", 0 0 12px 4px " + col + "44";
                     container.appendChild(bulb);
@@ -1019,7 +925,6 @@
             });
         }
 
-        /* Restaure les couleurs originales des guirlandes */
         function restoreGarlandColors() {
             document.querySelectorAll(".garland-bulb").forEach(bulb => {
                 bulb.style.backgroundColor = bulb.dataset.origColor;
@@ -1027,9 +932,6 @@
             });
         }
 
-        /* ============================================
-           CÉLÉBRATION DES GUIRLANDES
-        ============================================ */
         function startCelebration() {
             document.body.classList.add("celebrating");
 
@@ -1049,7 +951,6 @@
                 });
             }, 100);
 
-            /* Arrêter après 5 secondes */
             setTimeout(() => {
                 clearInterval(celebrationInterval);
                 celebrationInterval = null;
@@ -1073,7 +974,6 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            /* Anneaux extérieurs décoratifs */
             ctx.beginPath();
             ctx.arc(cx, cy, radius + 14, 0, 2 * Math.PI);
             ctx.strokeStyle = "#d4a017";
@@ -1086,7 +986,6 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            /* Segments */
             for (let i = 0; i < segCount; i++) {
                 const start = wheelAngle + i * segAngle;
                 const end = start + segAngle;
@@ -1103,7 +1002,6 @@
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                /* Texte */
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(start + segAngle / 2);
@@ -1111,22 +1009,21 @@
                 ctx.textBaseline = "middle";
 
                 if (seg.value === "BANQUEROUTE") {
-                    ctx.font = "bold 20px Cinzel, serif";
+                    ctx.font = "bold 17px Cinzel, serif";
                     ctx.fillStyle = "#ff4444";
-                    ctx.fillText("BANQUEROUTE", radius - 18, 0);
+                    ctx.fillText("BANQUEROUTE", radius - 14, 0);
                 } else {
-                    ctx.font = "bold 36px Cinzel, serif";
+                    ctx.font = "bold 32px Cinzel, serif";
                     ctx.fillStyle = "#ffffff";
                     ctx.shadowColor = "rgba(0,0,0,0.5)";
                     ctx.shadowBlur = 4;
-                    ctx.fillText(seg.label, radius - 22, 0);
+                    ctx.fillText(seg.label, radius - 20, 0);
                     ctx.shadowBlur = 0;
                 }
 
                 ctx.restore();
             }
 
-            /* Assombrir les bords */
             const depthGrad = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius);
             depthGrad.addColorStop(0, "rgba(255,255,255,0.07)");
             depthGrad.addColorStop(0.6, "rgba(0,0,0,0)");
@@ -1136,13 +1033,12 @@
             ctx.fillStyle = depthGrad;
             ctx.fill();
 
-            /* Rivets dorés entre segments */
             for (let i = 0; i < segCount; i++) {
                 const a = wheelAngle + i * segAngle;
                 const dx = cx + Math.cos(a) * (radius - 3);
                 const dy = cy + Math.sin(a) * (radius - 3);
                 ctx.beginPath();
-                ctx.arc(dx, dy, 5, 0, 2 * Math.PI);
+                ctx.arc(dx, dy, 4, 0, 2 * Math.PI);
                 ctx.fillStyle = "#d4a017";
                 ctx.fill();
                 ctx.strokeStyle = "#8b6914";
@@ -1150,7 +1046,6 @@
                 ctx.stroke();
             }
 
-            /* Centre (moyeu) */
             const hubGrad = ctx.createRadialGradient(cx - 5, cy - 5, 0, cx, cy, 34);
             hubGrad.addColorStop(0, "#f5c842");
             hubGrad.addColorStop(0.6, "#d4a017");
@@ -1182,13 +1077,21 @@
         ============================================ */
         function spinWheel() {
             if (isSpinning || gameWon) return;
+
+            /* Si le joueur relance alors qu'il avait une valeur de roue, il la perd */
+            if (canChooseConsonant) {
+                canChooseConsonant = false;
+                currentWheelValue = null;
+                infoLineEl.textContent = "Valeur de roue perdue. La roue tourne...";
+            } else {
+                infoLineEl.textContent = "La roue tourne...";
+            }
+
             isSpinning = true;
-            canChooseConsonant = false;
             spinBtnEl.disabled = true;
-            guessBtnWheelEl.disabled = true;
+            guessBtnEl.disabled = true;
             wheelResultEl.textContent = "";
             wheelResultEl.className = "wheel-result";
-            infoLineEl.textContent = "La roue tourne...";
 
             spinVelocity = 0.22 + Math.random() * 0.22;
 
@@ -1232,7 +1135,7 @@
         }
 
         /* ============================================
-           AFFICHAGE DE LA PHRASE
+           PHRASE
         ============================================ */
         function renderPhrase() {
             phraseContainerEl.innerHTML = "";
@@ -1242,7 +1145,6 @@
                     gap.className = "space-gap";
                     phraseContainerEl.appendChild(gap);
                 } else if (char === "'") {
-                    /* Apostrophe toujours visible */
                     const box = document.createElement("span");
                     box.className = "letter-box apostrophe";
                     box.textContent = "'";
@@ -1267,7 +1169,7 @@
         }
 
         /* ============================================
-           CLAVIER VIRTUEL
+           CLAVIER
         ============================================ */
         function buildKeyboard() {
             consonantGridEl.innerHTML = "";
@@ -1320,12 +1222,15 @@
                 }
             });
 
-            guessBtnWheelEl.disabled = isSpinning || gameWon;
-            spinBtnEl.disabled = isSpinning || canChooseConsonant || gameWon;
+            /* Le bouton proposition est actif dès que la roue ne tourne pas et partie non gagnée */
+            guessBtnEl.disabled = isSpinning || gameWon;
+
+            /* Spin : désactivé si en spin, si on peut encore choisir une consonne, ou si gagné */
+            spinBtnEl.disabled = isSpinning || gameWon;
         }
 
         /* ============================================
-           CHOIX D'UNE CONSONNE
+           CONSONNE
         ============================================ */
         function chooseConsonant(letter) {
             if (!canChooseConsonant || usedLetters.has(letter) || typeof currentWheelValue !== "number") return;
@@ -1353,7 +1258,7 @@
         }
 
         /* ============================================
-           CHOIX D'UNE VOYELLE — coût = occurrences × 5 PO
+           VOYELLE
         ============================================ */
         function chooseVowel(letter) {
             if (usedLetters.has(letter) || isSpinning || gameWon) return;
@@ -1400,7 +1305,6 @@
             gameWon = true;
             canChooseConsonant = false;
 
-            /* Révéler toutes les lettres avec leur accent */
             revealedLetters.clear();
             for (const ch of currentPhrase) {
                 if (isAlpha(ch)) revealedLetters.add(normalizeLetter(ch));
@@ -1411,14 +1315,13 @@
             goldBalance += 500;
             updateGoldDisplay();
 
-            /* Lancer la célébration des guirlandes */
             startCelebration();
 
             setTimeout(() => {
                 showModal(
                     "Bravo !",
                     '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
-                    '<p style="font-family:Cinzel,serif;font-size:1.2rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
+                    '<p style="font-family:Cinzel,serif;font-size:1.15rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
                     '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
                     '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
                     [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
@@ -1427,9 +1330,10 @@
         }
 
         /* ============================================
-           PROPOSER LA SOLUTION
+           PROPOSITION
         ============================================ */
         function openGuessModal() {
+            if (isSpinning || gameWon) return;
             showModal(
                 "Faire une proposition",
                 '<input type="text" class="modal-input" id="guessInput" placeholder="Tapez votre reponse..." autocomplete="off">',
@@ -1448,14 +1352,12 @@
             const inp = document.getElementById("guessInput");
             if (!inp) return;
 
-            /* Normaliser la saisie : majuscules, sans accents, un seul espace */
             const guess = inp.value
                 .trim()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .toUpperCase()
                 .replace(/\s+/g, " ");
 
-            /* Comparer avec la phrase normalisée */
             const target = currentPhrase.toUpperCase().replace(/\s+/g, " ");
             closeModal();
 
@@ -1479,7 +1381,7 @@
                     showModal(
                         "Bravo !",
                         '<p style="margin-bottom:12px;color:var(--fg);">Vous avez trouve :</p>' +
-                        '<p style="font-family:Cinzel,serif;font-size:1.2rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
+                        '<p style="font-family:Cinzel,serif;font-size:1.15rem;color:var(--accent-glow);margin-bottom:14px;letter-spacing:1px;line-height:1.4;">"' + currentDisplayPhrase + '"</p>' +
                         '<p style="color:var(--muted);">Bonus de victoire : +500 PO</p>' +
                         '<p style="font-size:1.2rem;font-weight:800;margin-top:10px;color:var(--accent);">Solde final : ' + goldBalance + ' PO</p>',
                         [{ text: "Nouvelle partie", cls: "primary", action: startNewGame }]
@@ -1528,7 +1430,7 @@
         }
 
         /* ============================================
-           AFFICHAGE DES PIÈCES D'OR
+           OR
         ============================================ */
         function updateGoldDisplay() {
             goldDisplayEl.textContent = goldBalance;
@@ -1541,7 +1443,6 @@
         function startNewGame() {
             closeModal();
 
-            /* Arrêter une éventuelle célébration en cours */
             if (celebrationInterval) {
                 clearInterval(celebrationInterval);
                 celebrationInterval = null;
@@ -1575,7 +1476,7 @@
            ÉVÉNEMENTS
         ============================================ */
         spinBtnEl.addEventListener("click", spinWheel);
-        guessBtnWheelEl.addEventListener("click", openGuessModal);
+        guessBtnEl.addEventListener("click", openGuessModal);
         newGameBtnEl.addEventListener("click", startNewGame);
 
         backBtnEl.addEventListener("click", () => {
@@ -1583,7 +1484,7 @@
                 "Retour au Village",
                 '<p style="color:var(--muted);">Voulez-vous vraiment quitter la partie en cours ?</p>',
                 [
-                    { text: "Quitter", cls: "primary", action: () => { closeModal; window.location.href = "#"; } },
+                    { text: "Quitter", cls: "primary", action: () => { closeModal(); window.location.href = "#"; } },
                     { text: "Rester", cls: "secondary", action: closeModal }
                 ]
             );
@@ -1603,7 +1504,7 @@
         });
 
         /* ============================================
-           INITIALISATION
+           INIT
         ============================================ */
         createGarlands();
         startNewGame();
